@@ -10,7 +10,7 @@ function App() {
   // const [cityName, setCityName] = useState<string>("")
   const [apiParameters, setApiParameters] = useState<linkProperties>(
     {
-      cityOrLatLon: "Athens",
+      cityOrLatLon: "",
       days: 1,
       aqi: "no",
       alerts: "no"
@@ -19,23 +19,22 @@ function App() {
   )
   const [newCity, setNewCity] = useState<string>("")
 
-  useEffect(() => {
-    const getDataAtStart = async () => {
-      const res = await getForecastFromApi(apiParameters)
-      const data = await res.json()
-      setForecast(data)
-    }
-    getDataAtStart()
+  // useEffect(() => {
+  //   const getDataAtStart = async () => {
+  //     const data = await getForecastFromApi(apiParameters)
+  //     setForecast(data)
+  //   }
+  //   getDataAtStart()
 
-  }, [])
+  // }, [])
 
   // useEffect(() => {
   //   setCityName(forecast?.location.name)
   // },[])
- 
+
 
   // const getForecastFromApi123 = async () => {
-    
+
   //   const res = await fetch('http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no', {
   //     method: "GET"
   //   })
@@ -47,17 +46,23 @@ function App() {
     const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&aqi=${apiParam.aqi}`)
     // const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
     // const res = await fetch('http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no')
-    const data = await res.json()
+    const data = res.json()
     return data
   }
 
-  const getForecast = async () => {
+  const getForecast = async (e: React.FormEvent<HTMLFormElement>) => {
+
+    e.preventDefault()
+
+    if (!newCity) {
+      alert("Enter a valid city!")
+      return
+    }
+
     setApiParameters({ ...apiParameters, cityOrLatLon: newCity })
     const data = await getForecastFromApi(apiParameters)
-    // setLocation(data)
-    // setCurrent(data)
     setForecast(data)
-    console.log(forecast?.location.name)
+
     setNewCity("")
   }
 
@@ -69,13 +74,19 @@ function App() {
     <div className="main-container">
       <form className="main-container form1" onSubmit={getForecast}>
         <input placeholder="Enter city name......or..... Enter longitude and latitude" className="input1"
-          value={newCity} type="text" onChange={(e) => setNewCity(e.target.value)}></input>
-        <button type="submit">Enter</button>
+          value={apiParameters.cityOrLatLon} type="text" onChange={(e) => setApiParameters({...apiParameters, cityOrLatLon:e.target.value})}></input>
+        <button type="submit" className="btn">Enter</button>
       </form>
       <div className="city-info">
-        <div>{forecast?.location.name}, {forecast?.location.region}</div>
+        <div>{forecast?.location.name}, {forecast?.location.region}, {forecast?.location.country}</div>
         <div>{forecast?.location.localtime}</div>
-        <div className="weather-info">Weather info</div>
+        <div className="weather-info" >
+          <div >Temperature: {forecast?.current.temp_c} Celsius</div>
+          <div >Wind speed: {forecast?.current.wind_kph} km/h</div>
+          <div >Wind direction: {forecast?.current.wind_dir} </div>
+          <div >Humidity: {forecast?.current.humidity} %</div>
+        </div>
+
       </div>
     </div>
 
