@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 function App() {
 
   const [forecast, setForecast] = useState<openweathermap>()
-  const [coords, setCoords] = useState<coords[]>([])
+  const [coords, setCoords] = useState<coordsProps[]>([])
   const [location, setLocation] = useState<locationType>()
   const [current, setCurrent] = useState<currentType>()
 
@@ -44,7 +44,7 @@ function App() {
 
 
 
-  const getForecastFromApi = async (apiParam: apiProperties, lat: string, lon: string) => {
+  const getForecastFromApi = async (apiParam: apiProperties, lat: number, lon: number) => {
     const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiParam.APIkey}`)
     // const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&aqi=${apiParam.aqi}`)
     // const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
@@ -54,10 +54,10 @@ function App() {
   }
 
   const translateWindDirection = (windDir: string) => {
-    if (windDir == "N") return "North"
-    if (windDir == "S") return "South"
-    if (windDir == "E") return "East"
-    if (windDir == "W") return "West"
+    if (windDir === "N") return "North"
+    if (windDir === "S") return "South"
+    if (windDir === "E") return "East"
+    if (windDir === "W") return "West"
 
   }
 
@@ -70,9 +70,11 @@ function App() {
       return
     }
 
-    setCoords(await getCoordsFromApi(apiParameters))
+    const newCoords:coordsProps[] = await getCoordsFromApi(apiParameters)
 
-    const data = await getForecastFromApi(apiParameters, coords[0].lat, coords[0].lon)
+    setCoords(newCoords)
+
+    const data = await getForecastFromApi(apiParameters, newCoords[0].lat, newCoords[0].lon)
     setForecast(data)
 
     setApiParameters({ ...apiParameters, cityName: "" })
@@ -90,13 +92,13 @@ function App() {
         <button type="submit" className="btn">Enter</button>
       </form>
       <div className="city-info">
-        <div>{coords[0].name}, {coords[0].country}</div>
+        <div>{coords[0]?.name}, {coords[0]?.country}</div>
         {/* <div>{forecast?.location.localtime}</div> */}
         <div className="weather-info" >
-          <div >Temperature: {forecast?.main.temp} Celsius</div>
-          <div >Wind speed: {forecast?.current.wind_kph} km/h</div>
-          <div >Wind direction: {forecast?.current.wind_dir} </div>
-          <div >Humidity: {forecast?.current.humidity} %</div>
+          <div >Temperature: {forecast?.main.temp} Farenheit</div>
+          <div >Wind speed: {forecast?.wind.speed} km/h</div>
+          <div >Wind direction: {forecast?.wind.deg} </div>
+          <div >Humidity: {forecast?.main.humidity} %</div>
         </div>
 
       </div>
@@ -202,12 +204,57 @@ interface apiProperties {
   APIkey: string
 }
 
-interface coords {
-  name: string
-  lat: string
-  lon: string
+interface coordsProps {
+
+  name: string,
+  local_names:
+  {
+    af: string,
+    ar: string,
+    ascii: string,
+    az: string,
+    bg: string,
+    ca: string,
+    da: string,
+    de: string,
+    el: string,
+    en: string,
+    eu: string,
+    fa: string,
+    feature_name: string,
+    fi: string,
+    fr: string,
+    gl: string,
+    he: string,
+    hi: string,
+    hr: string,
+    hu: string,
+    id: string,
+    it: string,
+    ja: string,
+    la: string,
+    lt: string,
+    mk: string,
+    nl: string,
+    no: string,
+    pl: string,
+    pt: string,
+    ro: string,
+    ru: string,
+    sk: string,
+    sl: string,
+    sr: string,
+    th: string,
+    tr: string,
+    vi: string,
+    zu: string
+  },
+  lat: number,
+  lon: number,
   country: string
+  state: string
 }
+
 
 interface openweathermap {
   coord: {
