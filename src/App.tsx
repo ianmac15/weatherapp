@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 function App() {
 
   const [forecast, setForecast] = useState<forecastType>()
-  const [location, setLocation] = useState<locationType>()
-  const [current, setCurrent] = useState<currentType>()
-  // const [dayAndTime, setDayAndTime] = useState()
-  // const [cityName, setCityName] = useState<string>("")
+  
+ 
   const [apiParameters, setApiParameters] = useState<linkProperties>(
     {
       cityOrLatLon: "",
@@ -19,28 +17,7 @@ function App() {
   )
   const [newCity, setNewCity] = useState<string>("")
 
-  // useEffect(() => {
-  //   const getDataAtStart = async () => {
-  //     const data = await getForecastFromApi(apiParameters)
-  //     setForecast(data)
-  //   }
-  //   getDataAtStart()
-
-  // }, [])
-
-  // useEffect(() => {
-  //   setCityName(forecast?.location.name)
-  // },[])
-
-
-  // const getForecastFromApi123 = async () => {
-
-  //   const res = await fetch('http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no', {
-  //     method: "GET"
-  //   })
-  //   const data = await res.json()
-  //   setForecast(data)
-  // }
+  
 
   const getForecastFromApi = async (apiParam: linkProperties) => {
     const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&aqi=${apiParam.aqi}`)
@@ -81,7 +58,7 @@ function App() {
         <div>{forecast?.location.name}, {forecast?.location.region}, {forecast?.location.country}</div>
         <div>{forecast?.location.localtime}</div>
         <div className="weather-info" >
-          <div >Temperature: {forecast?.current.temp_c} Celsius</div>
+          <div >Temperature: {forecast?.current.temp_c}, {forecast?.current.condition.icon} Celsius</div>
           <div >Wind speed: {forecast?.current.wind_kph} km/h</div>
           <div >Wind direction: {forecast?.current.wind_dir} </div>
           <div >Humidity: {forecast?.current.humidity} %</div>
