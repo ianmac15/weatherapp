@@ -51,6 +51,8 @@ body {
   color: white;
   border: solid;
   border-width: 0.2rem;
+  background-color: rgba(95, 62, 62, 0.61);
+  border-radius: 1rem;
 }
 
 .btn {
@@ -65,5 +67,11 @@ body {
 
 .btn:active {
   background-color: cornflowerblue;
+}
+
+.temp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 

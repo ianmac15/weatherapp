@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 function App() {
 
   const [forecast, setForecast] = useState<forecastType>()
-  
- 
+
+
   const [apiParameters, setApiParameters] = useState<linkProperties>(
     {
       cityOrLatLon: "",
@@ -17,7 +17,7 @@ function App() {
   )
   const [newCity, setNewCity] = useState<string>("")
 
-  
+
 
   const getForecastFromApi = async (apiParam: linkProperties) => {
     const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&aqi=${apiParam.aqi}`)
@@ -36,7 +36,7 @@ function App() {
       return
     }
 
-    
+
     const data = await getForecastFromApi(apiParameters)
     setForecast(data)
 
@@ -51,14 +51,18 @@ function App() {
     <div className="main-container">
       <form className="main-container form1" onSubmit={getForecast}>
         <input placeholder="Enter city name......or..... Enter longitude and latitude" className="input1"
-          value={apiParameters.cityOrLatLon} type="text" onChange={(e) => setApiParameters({...apiParameters, cityOrLatLon:e.target.value})}></input>
+          value={apiParameters.cityOrLatLon} type="text" onChange={(e) => setApiParameters({ ...apiParameters, cityOrLatLon: e.target.value })}></input>
         <button type="submit" className="btn">Enter</button>
       </form>
       <div className="city-info">
         <div>{forecast?.location.name}, {forecast?.location.region}, {forecast?.location.country}</div>
         <div>{forecast?.location.localtime}</div>
         <div className="weather-info" >
-          <div >Temperature: {forecast?.current.temp_c}, {forecast?.current.condition.icon} Celsius</div>
+          <div className="temp">
+            <div >Temperature: {forecast?.current.temp_c} Celsius</div>
+            <img src = {forecast?.current.condition.icon} />
+          </div>
+
           <div >Wind speed: {forecast?.current.wind_kph} km/h</div>
           <div >Wind direction: {forecast?.current.wind_dir} </div>
           <div >Humidity: {forecast?.current.humidity} %</div>
