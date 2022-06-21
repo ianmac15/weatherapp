@@ -54,12 +54,12 @@ function App() {
 
     e.preventDefault()
 
-    if (!newCity) {
+    if (!apiParameters.cityOrLatLon) {
       alert("Enter a valid city!")
       return
     }
 
-    setApiParameters({ ...apiParameters, cityOrLatLon: newCity })
+    
     const data = await getForecastFromApi(apiParameters)
     setForecast(data)
 
