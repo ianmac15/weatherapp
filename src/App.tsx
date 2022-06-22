@@ -5,6 +5,18 @@ function App() {
 
   const [forecast, setForecast] = useState<forecastType>()
 
+  useEffect(() => {
+    const forecastFromStorage = window.localStorage.getItem('forecast')
+    if (forecastFromStorage === 'string') {
+        setForecast(JSON.parse(forecastFromStorage))
+    }
+  }, [])
+
+  useEffect(() => {
+    const forecastJSON = JSON.stringify(forecast)
+    window.localStorage.setItem('forecast', forecastJSON)
+  }, [forecast])
+
 
   const [apiParameters, setApiParameters] = useState<linkProperties>(
     {
@@ -15,7 +27,7 @@ function App() {
 
     }
   )
-  const [newCity, setNewCity] = useState<string>("")
+
 
 
 
@@ -40,7 +52,13 @@ function App() {
     const data = await getForecastFromApi(apiParameters)
     setForecast(data)
 
-    setNewCity("")
+    setApiParameters({
+      cityOrLatLon: "",
+      days: 1,
+      aqi: "no",
+      alerts: "no"
+
+    })
   }
 
 
@@ -60,7 +78,7 @@ function App() {
         <div className="weather-info" >
           <div className="temp">
             <div >Temperature: {forecast?.current.temp_c} Celsius</div>
-            <img src = {forecast?.current.condition.icon} />
+            <img src={forecast?.current.condition.icon} />
           </div>
 
           <div >Wind speed: {forecast?.current.wind_kph} km/h</div>
