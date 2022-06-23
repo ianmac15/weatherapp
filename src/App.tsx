@@ -3,20 +3,36 @@ import { useEffect, useState } from "react";
 
 function App() {
 
-  const [forecast, setForecast] = useState<forecastType>()
+
+  // const initalizeData = () => {
+  //     const weatherFromStorage = window.localStorage.getItem('weatherData')
+
+  //     if (typeof weatherFromStorage === 'string') {
+  //       console.log("Data retreived")
+  //       return JSON.parse(weatherFromStorage)
+
+  //     }
+  // }
+
+
+
+
+  const [weather, setweather] = useState<weatherType>()
 
   useEffect(() => {
-    const forecastFromStorage = window.localStorage.getItem('forecast')
-    if (forecastFromStorage === 'string') {
-        setForecast(JSON.parse(forecastFromStorage))
+    const data = window.localStorage.getItem('weatherData')
+    try {
+      if (data !== null) {
+        setweather(JSON.parse(data))
+      }
+    } catch {
+      console.log("Error!!!")
     }
   }, [])
 
   useEffect(() => {
-    const forecastJSON = JSON.stringify(forecast)
-    window.localStorage.setItem('forecast', forecastJSON)
-  }, [forecast])
-
+    window.localStorage.setItem('weatherData', JSON.stringify(weather))
+  }, [weather])
 
   const [apiParameters, setApiParameters] = useState<linkProperties>(
     {
@@ -28,71 +44,101 @@ function App() {
     }
   )
 
-
-
-
-  const getForecastFromApi = async (apiParam: linkProperties) => {
+  const getweatherFromApi = async (apiParam: linkProperties) => {
     const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&aqi=${apiParam.aqi}`)
-    // const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
-    // const res = await fetch('http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no')
+    // const res = await fetch(`http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
+    // const res = await fetch('http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no')
     const data = res.json()
     return data
   }
 
-  const getForecast = async (e: React.FormEvent<HTMLFormElement>) => {
+  const getweather = async (e: React.FormEvent<HTMLFormElement>) => {
 
-    e.preventDefault()
+    try {
+      e.preventDefault()
 
-    if (!apiParameters.cityOrLatLon) {
+      if (!apiParameters.cityOrLatLon) {
+        alert("Enter a valid city!")
+        return
+      }
+      const data: weatherType = await getweatherFromApi(apiParameters)
+      if (data.location.name === null) {
+        alert("Enter a valid city!")
+        return
+      }
+      setweather(data)
+
+      setApiParameters({
+        cityOrLatLon: "",
+        days: 1,
+        aqi: "no",
+        alerts: "no"
+
+      })
+    } catch {
       alert("Enter a valid city!")
-      return
+      setApiParameters({
+        cityOrLatLon: "",
+        days: 1,
+        aqi: "no",
+        alerts: "no"
+
+      })
+
     }
 
 
-    const data = await getForecastFromApi(apiParameters)
-    setForecast(data)
-
-    setApiParameters({
-      cityOrLatLon: "",
-      days: 1,
-      aqi: "no",
-      alerts: "no"
-
-    })
   }
 
-
-
-
+  const getWindDir = (windDir: string | undefined) => {
+    if (typeof windDir === 'string') {
+      try {
+        let newString = ""
+        for (let i = 0; i < windDir.length; i++) {
+          if (windDir[i] == 'N') newString += "North "
+          if (windDir[i] == 'E') newString += "East "
+          if (windDir[i] == 'S') newString += "South "
+          if (windDir[i] == 'W') newString += "West "
+        }
+        return newString
+      } catch {
+        console.log('Invalid Wind Direction')
+      }
+    }
+  }
 
   return (
     <div className="main-container">
-      <form className="main-container form1" onSubmit={getForecast}>
-        <input placeholder="Enter city name......or..... Enter longitude and latitude" className="input1"
+      <form className="main-container form1" onSubmit={getweather}>
+        <input placeholder="Enter city name" className="input1"
           value={apiParameters.cityOrLatLon} type="text" onChange={(e) => setApiParameters({ ...apiParameters, cityOrLatLon: e.target.value })}></input>
-        <button type="submit" className="btn">Enter</button>
+        <input type="submit" className="btn" value="Enter" />
       </form>
-      <div className="city-info">
-        <div>{forecast?.location.name}, {forecast?.location.region}, {forecast?.location.country}</div>
-        <div>{forecast?.location.localtime}</div>
-        <div className="weather-info" >
-          <div className="temp">
-            <div >Temperature: {forecast?.current.temp_c} Celsius</div>
-            <img src={forecast?.current.condition.icon} />
+      <div className="weather-container1">
+        <div className="city-info">
+          <div>{weather?.location.name}, {weather?.location.region}, {weather?.location.country}</div>
+          <div>Weather at:    {weather?.location.localtime}</div>
+          <div className="weather-info" >
+            <div className="temp">
+              <div >Temperature: {weather?.current.temp_c} &deg; C</div>
+              <img src={weather?.current.condition.icon} />
+            </div>
+            <div >Wind speed: {weather?.current.wind_kph} km/h</div>
+            <div >Wind direction: {getWindDir(weather?.current.wind_dir)} </div>
+            <div >Humidity: {weather?.current.humidity} %</div>
           </div>
-
-          <div >Wind speed: {forecast?.current.wind_kph} km/h</div>
-          <div >Wind direction: {forecast?.current.wind_dir} </div>
-          <div >Humidity: {forecast?.current.humidity} %</div>
         </div>
-
       </div>
+      <div className="weather-container2">
+        
+      </div>
+
     </div>
 
   );
 }
 
-interface forecastType {
+interface weatherType {
   location: {
     name: string
     region: string
@@ -132,47 +178,6 @@ interface forecastType {
     gust_mph: number
     gust_kph: number
   }
-}
-
-interface locationType {
-  name: string
-  region: string
-  country: string
-  lat: number
-  lon: number
-  tz_id: string
-  localtime_epoch: number
-  localtime: string
-}
-
-interface currentType {
-  last_updated_epoch: number
-  last_updated: string
-  temp_c: number
-  temp_f: number
-  is_day: number
-  condition: {
-    text: string
-    icon: string
-    code: number
-  }
-  wind_mph: number
-  wind_kph: number
-  wind_degree: number
-  wind_dir: string
-  pressure_mb: number
-  pressure_in: number
-  precip_mm: number
-  precip_in: number
-  humidity: number
-  cloud: number
-  feelslike_c: number
-  feelslike_f: number
-  vis_km: number
-  vis_miles: number
-  uv: number
-  gust_mph: number
-  gust_kph: number
 }
 
 interface linkProperties {
