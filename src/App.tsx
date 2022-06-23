@@ -1,21 +1,8 @@
 import { useEffect, useState } from "react";
+import Forecasts from "./components/Forecasts";
 
 
 function App() {
-
-
-  // const initalizeData = () => {
-  //     const weatherFromStorage = window.localStorage.getItem('weatherData')
-
-  //     if (typeof weatherFromStorage === 'string') {
-  //       console.log("Data retreived")
-  //       return JSON.parse(weatherFromStorage)
-
-  //     }
-  // }
-
-
-
 
   const [weather, setweather] = useState<weatherType>()
 
@@ -107,6 +94,56 @@ function App() {
     }
   }
 
+  const getDay = () => {
+    switch (new Date().getDay()) {
+      case 0:
+        return "Sunday"
+      case 1:
+        return "Monday"
+      case 2:
+        return "Tuesday"
+      case 3:
+        return "Wednesday"
+      case 4:
+        return "Thursday"
+      case 5:
+        return "Friday"
+      case 6:
+        return "Saturday"
+    }
+  }
+
+  const getDate = (date: string | undefined) => {
+    if (typeof date === 'string') {
+      try {
+        const arrayDate: string[] = date.split(" ")
+
+
+
+        for (let i = 0; i < arrayDate.length; i++) {
+          console.log(arrayDate[i])
+        }
+      } catch {
+        console.log("Error: invalid date")
+      }
+    }
+
+  }
+
+  const getTime = () => {
+    const date = new Date()
+    const hours = date.getHours()
+    let stringHours = ""
+    if (hours < 10) {
+      stringHours = "0"+hours
+    }
+    const minutes = date.getMinutes()
+    let
+    const seconds = date.getSeconds()
+    return ""+hours+":"+minutes+":"+seconds
+  }
+
+
   return (
     <div className="main-container">
       <form className="main-container form1" onSubmit={getweather}>
@@ -117,12 +154,17 @@ function App() {
       <div className="weather-container1">
         <div className="city-info">
           <div>{weather?.location.name}, {weather?.location.region}, {weather?.location.country}</div>
-          <div>Weather at:    {weather?.location.localtime}</div>
+          <div>{getDay()} {getTime()}</div>
+        </div>
+      </div>
+      <div className="weather-container1">
+        <div className="city-info">
           <div className="weather-info" >
             <div className="temp">
-              <div >Temperature: {weather?.current.temp_c} &deg; C</div>
+              <div >{weather?.current.condition.text}</div>
               <img src={weather?.current.condition.icon} />
             </div>
+            <div>Temperature: {weather?.current.temp_c} &deg; C</div>
             <div >Wind speed: {weather?.current.wind_kph} km/h</div>
             <div >Wind direction: {getWindDir(weather?.current.wind_dir)} </div>
             <div >Humidity: {weather?.current.humidity} %</div>
@@ -130,9 +172,8 @@ function App() {
         </div>
       </div>
       <div className="weather-container2">
-        
+        {/* <Forecasts /> */}
       </div>
-
     </div>
 
   );
@@ -185,6 +226,31 @@ interface linkProperties {
   days: number
   aqi: string
   alerts: string
+}
+
+export interface forecastType {
+  forecastday: {
+    date: number
+    maxtemp_c: number
+    mintemp_c: number
+    maxwind_kph: number
+    totalprecip_mm: number
+    avghumidity: number
+    daily_chance_of_rain: number
+    daily_chance_of_snow: number
+    condition: {
+      text: string
+      icon: string
+    }
+  }
+  astro: {
+    sunrise: string
+    sunset: string
+    moonrise: string
+    moonset: string
+    moon_phase: string
+    moon_illumination: string
+  }
 }
 
 export default App;
