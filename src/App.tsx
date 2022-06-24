@@ -31,6 +31,31 @@ function App() {
     }
   )
 
+  const [exactDate, setExactDate] = useState<dateType>({
+    day: 0,
+    date: 0,
+    month: 0,
+    year: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  })
+
+  useEffect(() => {
+    const date = new Date()
+    setExactDate({
+      ...exactDate,
+      day: date.getDay(),
+      date: date.getDate(),
+      month: date.getMonth(),
+      year: date.getFullYear(),
+      hours: date.getHours(),
+      minutes: date.getMinutes(),
+      seconds: date.getSeconds()
+    })
+
+  }, [exactDate])
+
   const getweatherFromApi = async (apiParam: linkProperties) => {
     const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&aqi=${apiParam.aqi}`)
     // const res = await fetch(`http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
@@ -94,8 +119,9 @@ function App() {
     }
   }
 
-  const getDay = () => {
-    switch (new Date().getDay()) {
+  const getFormattedDay = () => {
+    // switch (new Date().getDay()) {
+    switch (exactDate.day) {
       case 0:
         return "Sunday"
       case 1:
@@ -113,7 +139,42 @@ function App() {
     }
   }
 
-  const getDate = (date: string | undefined) => {
+  const getFormattedMonth = () => {
+    // switch (new Date().getMonth()) {
+    switch (exactDate.month) {
+      case 0:
+        return "January"
+      case 1:
+        return "February"
+      case 2:
+        return "March"
+      case 3:
+        return "April"
+      case 4:
+        return "May"
+      case 5:
+        return "June"
+      case 6:
+        return "July"
+      case 7:
+        return "Augoust"
+      case 8:
+        return "September"
+      case 9:
+        return "October"
+      case 10:
+        return "November"
+      case 11:
+        return "December"
+    }
+  }
+
+  const getFormattedDate = () => {
+    // const date = new Date()
+    return getFormattedDay() + " " + exactDate.date + " " + " " + getFormattedMonth() + " " + exactDate.year
+  }
+
+  const getDate2 = (date: string | undefined) => {
     if (typeof date === 'string') {
       try {
         const arrayDate: string[] = date.split(" ")
@@ -131,16 +192,26 @@ function App() {
   }
 
   const getTime = () => {
-    const date = new Date()
-    const hours = date.getHours()
-    let stringHours = ""
+    // const date = new Date()
+    // const hours = date.getHours()
+    const hours = exactDate.hours
+    let stringHours = "" + hours
     if (hours < 10) {
-      stringHours = "0"+hours
+      stringHours = "0" + stringHours
     }
-    const minutes = date.getMinutes()
-    let
-    const seconds = date.getSeconds()
-    return ""+hours+":"+minutes+":"+seconds
+    // const minutes = date.getMinutes()
+    const minutes = exactDate.minutes
+    let stringMins = "" + minutes
+    if (minutes < 10) {
+      stringMins = "0" + stringMins
+    }
+    // const seconds = date.getSeconds()
+    const seconds = exactDate.seconds
+    let stringSecs = "" + seconds
+    if (seconds < 10) {
+      stringSecs = "0" + stringSecs
+    }
+    return stringHours + ":" + stringMins + ":" + stringSecs
   }
 
 
@@ -154,16 +225,19 @@ function App() {
       <div className="weather-container1">
         <div className="city-info">
           <div>{weather?.location.name}, {weather?.location.region}, {weather?.location.country}</div>
-          <div>{getDay()} {getTime()}</div>
+          <div>{getFormattedDate()}</div>
+          <div>{getTime()}</div>
         </div>
       </div>
-      <div className="weather-container1">
+      <div className="weather-container2">
         <div className="city-info">
           <div className="weather-info" >
+          <strong>The Weather right now</strong>
             <div className="temp">
               <div >{weather?.current.condition.text}</div>
               <img src={weather?.current.condition.icon} />
             </div>
+            
             <div>Temperature: {weather?.current.temp_c} &deg; C</div>
             <div >Wind speed: {weather?.current.wind_kph} km/h</div>
             <div >Wind direction: {getWindDir(weather?.current.wind_dir)} </div>
@@ -171,7 +245,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="weather-container2">
+      <div className="weather-container3">
         {/* <Forecasts /> */}
       </div>
     </div>
@@ -251,6 +325,16 @@ export interface forecastType {
     moon_phase: string
     moon_illumination: string
   }
+}
+
+interface dateType {
+  day: number
+  date: number
+  month: number
+  year: number
+  hours: number
+  minutes: number
+  seconds: number
 }
 
 export default App;
