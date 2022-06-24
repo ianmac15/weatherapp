@@ -38,24 +38,30 @@ body {
   width: 100%;
 }
 
-.weather-container1 {
+.weather-container {
   width: 100%;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.weather-container1 {
+  width: 40%;
+  display: flex;
   flex-direction: column;
-  align-items: right;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .weather-container2 {
-  width: 100%;
+  width: 60%;
   display: flex;
-  flex-direction: column;
-  align-items: left;
+  align-items: center;
   justify-content: flex-start;
 }
 
 .weather-container3 {
-  width: 100%;
+  width: 30%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,12 +71,11 @@ body {
   padding: 1rem;
   font-size: 2rem;
   margin: 2rem;
-  margin-top: 10rem;
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: flex-start;
   /* justify-content: space-between; */
-  width: 40%;
+  width: 100%;
   max-width: 40rem;
   color: white;
   border: solid;
@@ -80,7 +85,9 @@ body {
 }
 
 .city-time {
-  
+  border: none;
+  background: none;
+  font-size: 2.5rem;
 }
 
 .btn {

@@ -56,6 +56,13 @@ function App() {
 
   }, [exactDate])
 
+  // useEffect(() =>  {
+  //   const fecthAt10 = async () => {
+  //     setTimeout( await getweatherFromApi(apiParameters), 1000)
+  //   }
+  //   fecthAt10()
+  // }, [weather])
+
   const getweatherFromApi = async (apiParam: linkProperties) => {
     const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&aqi=${apiParam.aqi}`)
     // const res = await fetch(`http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
@@ -222,28 +229,37 @@ function App() {
           value={apiParameters.cityOrLatLon} type="text" onChange={(e) => setApiParameters({ ...apiParameters, cityOrLatLon: e.target.value })}></input>
         <input type="submit" className="btn" value="Enter" />
       </form>
-      <div className="weather-container1">
-        <div className="city-info">
-          <div>{weather?.location.name}, {weather?.location.region}, {weather?.location.country}</div>
-          <div>{getFormattedDate()}</div>
-          <div>{getTime()}</div>
-        </div>
-      </div>
-      <div className="weather-container2">
-        <div className="city-info">
-          <div className="weather-info" >
-          <strong>The Weather right now</strong>
-            <div className="temp">
-              <div >{weather?.current.condition.text}</div>
-              <img src={weather?.current.condition.icon} />
+      <div className="weather-container">
+        <div className="weather-container1">
+          <div className="city-info city-time">
+            <div>{weather?.location.name}, {weather?.location.region}, {weather?.location.country}</div>
+            <div>{getFormattedDate()}</div>
+            <div>{getTime()}</div>
+          </div>
+          <div className="city-info">
+            <div className="weather-info" >
+              <strong>The Weather right now</strong>
+              <div className="temp">
+                <div >{weather?.current.condition.text}</div>
+                <img src={weather?.current.condition.icon} />
+              </div>
+
+              <div>Temperature: {weather?.current.temp_c} &deg; C</div>
+              <div >Wind speed: {weather?.current.wind_kph} km/h</div>
+              <div >Wind direction: {getWindDir(weather?.current.wind_dir)} </div>
+              <div >Humidity: {weather?.current.humidity} %</div>
+              <div>Pressure: {weather?.current.pressure_mb} millibars</div>
+              <div> Precipitation: {weather?.current.precip_mm} mm</div>
             </div>
-            
-            <div>Temperature: {weather?.current.temp_c} &deg; C</div>
-            <div >Wind speed: {weather?.current.wind_kph} km/h</div>
-            <div >Wind direction: {getWindDir(weather?.current.wind_dir)} </div>
-            <div >Humidity: {weather?.current.humidity} %</div>
           </div>
         </div>
+        <div className="weather-container2"> 
+
+        </div>
+      </div>
+
+      <div className="weather-container2">
+
       </div>
       <div className="weather-container3">
         {/* <Forecasts /> */}
