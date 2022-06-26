@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import Forecasts from "./components/Forecasts";
+import ForecastDay from "./components/ForecastDay";
 
 
 function App() {
 
   const [weather, setweather] = useState<weatherType>()
+  // const [forecast, setForecast] = useState<weatherType>()
+  const [dayForecast, setDayForecast] = useState<forecastdayType>()
 
   useEffect(() => {
     const data = window.localStorage.getItem('weatherData')
@@ -24,7 +26,7 @@ function App() {
   const [apiParameters, setApiParameters] = useState<linkProperties>(
     {
       cityOrLatLon: "",
-      days: 1,
+      days: 3,
       aqi: "no",
       alerts: "no"
 
@@ -64,10 +66,16 @@ function App() {
   // }, [weather])
 
   const getweatherFromApi = async (apiParam: linkProperties) => {
-    const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&aqi=${apiParam.aqi}`)
+    const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
     // const res = await fetch(`http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
     // const res = await fetch('http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no')
     const data = res.json()
+    return data
+  }
+
+  const getForecastFromApi = async (apiParam: linkProperties) => {
+    const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
+    const data = await res.json()
     return data
   }
 
@@ -80,16 +88,22 @@ function App() {
         alert("Enter a valid city!")
         return
       }
+
       const data: weatherType = await getweatherFromApi(apiParameters)
+      // const data2: forecastType = await getForecastFromApi(apiParameters)
+
       if (data.location.name === null) {
         alert("Enter a valid city!")
         return
       }
+
+
       setweather(data)
+      // setForecast(data2)
 
       setApiParameters({
         cityOrLatLon: "",
-        days: 1,
+        days: 3,
         aqi: "no",
         alerts: "no"
 
@@ -98,7 +112,7 @@ function App() {
       alert("Enter a valid city!")
       setApiParameters({
         cityOrLatLon: "",
-        days: 1,
+        days: 3,
         aqi: "no",
         alerts: "no"
 
@@ -126,9 +140,9 @@ function App() {
     }
   }
 
-  const getFormattedDay = () => {
+  const getFormattedDay = (day: number) => {
     // switch (new Date().getDay()) {
-    switch (exactDate.day) {
+    switch (day) {
       case 0:
         return "Sunday"
       case 1:
@@ -178,25 +192,25 @@ function App() {
 
   const getFormattedDate = () => {
     // const date = new Date()
-    return getFormattedDay() + " " + exactDate.date + " " + " " + getFormattedMonth() + " " + exactDate.year
+    return getFormattedDay(exactDate.day) + " " + exactDate.date + " " + " " + getFormattedMonth() + " " + exactDate.year
   }
 
-  const getDate2 = (date: string | undefined) => {
-    if (typeof date === 'string') {
-      try {
-        const arrayDate: string[] = date.split(" ")
+  // const getDate2 = (date: string | undefined) => {
+  //   if (typeof date === 'string') {
+  //     try {
+  //       const arrayDate: string[] = date.split(" ")
 
 
 
-        for (let i = 0; i < arrayDate.length; i++) {
-          console.log(arrayDate[i])
-        }
-      } catch {
-        console.log("Error: invalid date")
-      }
-    }
+  //       for (let i = 0; i < arrayDate.length; i++) {
+  //         console.log(arrayDate[i])
+  //       }
+  //     } catch {
+  //       console.log("Error: invalid date")
+  //     }
+  //   }
 
-  }
+  // }
 
   const getTime = () => {
     // const date = new Date()
@@ -221,6 +235,18 @@ function App() {
     return stringHours + ":" + stringMins + ":" + stringSecs
   }
 
+  const getDayForecast = () => {
+    
+    const index = [0,1,2]
+
+    return(index.map((x) =>
+     
+      <ForecastDay forecast={weather?.forecast.forecastday[x]} day={getFormattedDay(exactDate.day + x) || ''}
+        date={exactDate.date + x} />
+    ))
+
+
+  }
 
   return (
     <div className="main-container">
@@ -253,23 +279,70 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="weather-container2"> 
+        <div className="weather-container2">
+          <div className="weather-container3">
+            {getDayForecast()}
+          </div>
+          <div className="weather-container3">
 
+          </div>
         </div>
-      </div>
-
-      <div className="weather-container2">
-
-      </div>
-      <div className="weather-container3">
-        {/* <Forecasts /> */}
       </div>
     </div>
 
   );
 }
 
-interface weatherType {
+// interface weatherType {
+//   location: {
+//     name: string
+//     region: string
+//     country: string
+//     lat: number
+//     lon: number
+//     tz_id: string
+//     localtime_epoch: number
+//     localtime: string
+//   }
+//   current: {
+//     last_updated_epoch: number
+//     last_updated: string
+//     temp_c: number
+//     temp_f: number
+//     is_day: number
+//     condition: {
+//       text: string
+//       icon: string
+//       code: number
+//     }
+//     wind_mph: number
+//     wind_kph: number
+//     wind_degree: number
+//     wind_dir: string
+//     pressure_mb: number
+//     pressure_in: number
+//     precip_mm: number
+//     precip_in: number
+//     humidity: number
+//     cloud: number
+//     feelslike_c: number
+//     feelslike_f: number
+//     vis_km: number
+//     vis_miles: number
+//     uv: number
+//     gust_mph: number
+//     gust_kph: number
+//   }
+// }
+
+interface linkProperties {
+  cityOrLatLon: string
+  days: number
+  aqi: string
+  alerts: string
+}
+
+export interface weatherType {
   location: {
     name: string
     region: string
@@ -309,18 +382,15 @@ interface weatherType {
     gust_mph: number
     gust_kph: number
   }
+  forecast: {
+    forecastday: forecastdayType[]
+  }
 }
 
-interface linkProperties {
-  cityOrLatLon: string
-  days: number
-  aqi: string
-  alerts: string
-}
+export interface forecastdayType {
 
-export interface forecastType {
-  forecastday: {
-    date: number
+  date: number
+  day: {
     maxtemp_c: number
     mintemp_c: number
     maxwind_kph: number
@@ -333,6 +403,7 @@ export interface forecastType {
       icon: string
     }
   }
+
   astro: {
     sunrise: string
     sunset: string
@@ -341,6 +412,44 @@ export interface forecastType {
     moon_phase: string
     moon_illumination: string
   }
+  hour: [{
+    time: string
+    temp_c: number
+    temp_f: number
+    is_day: number
+    condition: {
+      text: string
+      icon: string
+    }
+    wind_mph: number
+    wind_kph: number
+    wind_degree: number
+    wind_dir: string
+    pressure_mb: number
+    pressure_in: number
+    precip_mm: number
+    precip_in: number
+    humidity: number
+    cloud: number
+    feelslike_c: number
+    feelslike_f: number
+    vis_km: number
+    vis_miles: number
+    uv: number
+    gust_mph: number
+    gust_kph: number
+    windchill_c: number
+    windchill_f: number
+    heatindex_c: number
+    heatindex_f: number
+    dewpoint_c: number
+    dewpoint_f: number
+    will_it_rain: number
+    chance_of_rain: number
+    will_it_snow: number
+    chance_of_snow: number
+  }]
+
 }
 
 interface dateType {
@@ -352,5 +461,7 @@ interface dateType {
   minutes: number
   seconds: number
 }
+
+
 
 export default App;
