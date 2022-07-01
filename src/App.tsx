@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ForecastDay from "./components/ForecastDay";
+import {geolocationType} from "./types-interfaces"
 
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
   const [weather, setweather] = useState<weatherType>()
   // const [forecast, setForecast] = useState<weatherType>()
   const [dayForecast, setDayForecast] = useState<forecastdayType>()
+  const [geolocation, setGeolocation] = useState<geolocationType>()
 
   useEffect(() => {
     const data = window.localStorage.getItem('weatherData')
@@ -64,6 +66,13 @@ function App() {
   //   }
   //   fecthAt10()
   // }, [weather])
+
+  
+  const getGeolocation = async () => {
+    const res = await fetch('http://ip-api.com/json/')
+    return res.json()
+  }
+
 
   const getweatherFromApi = async (apiParam: linkProperties) => {
     const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
