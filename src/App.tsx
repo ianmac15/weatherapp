@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ForecastDay from "./components/ForecastDay";
-import {geolocationType} from "./types-interfaces"
+import { geolocationType } from "./types-interfaces"
 
 
 function App() {
@@ -8,23 +8,19 @@ function App() {
   const [weather, setweather] = useState<weatherType>()
   // const [forecast, setForecast] = useState<weatherType>()
   const [dayForecast, setDayForecast] = useState<forecastdayType>()
-  const [geolocation, setGeolocation] = useState<geolocationType>()
-
-  useEffect(() => {
-    const data = window.localStorage.getItem('weatherData')
-    try {
-      if (data !== null) {
-        setweather(JSON.parse(data))
-      }
-    } catch {
-      console.log("Error!!!")
+  const [geolocation, setGeolocation] = useState<geolocationType>(
+    {
+      country_code: "",
+      country_name: "",
+      city: "Athens",
+      postal: "",
+      latitude: "",
+      longitude: "",
+      IP: "",
+      state: ""
     }
-  }, [])
 
-  useEffect(() => {
-    window.localStorage.setItem('weatherData', JSON.stringify(weather))
-  }, [weather])
-
+  )
   const [apiParameters, setApiParameters] = useState<linkProperties>(
     {
       cityOrLatLon: "",
@@ -34,7 +30,6 @@ function App() {
 
     }
   )
-
   const [exactDate, setExactDate] = useState<dateType>({
     day: 0,
     date: 0,
@@ -44,6 +39,60 @@ function App() {
     minutes: 0,
     seconds: 0
   })
+
+
+  useEffect(() => {
+
+    
+
+    const data = window.localStorage.getItem('weatherData')
+
+    try {
+      if (!data) {
+        const getLocation = async () => {
+          const geolocation:geolocationType = await getGeolocation()
+          setGeolocation(geolocation)
+        }
+  
+        getLocation()
+        console.log(geolocation)
+       
+        setApiParameters({ ...apiParameters, cityOrLatLon: geolocation?.city })
+  
+        const getInitialWeather = async () => {
+          const data2: weatherType = await getweatherFromApi(apiParameters)
+          setweather(data2)
+        }
+  
+        getInitialWeather()
+
+        console.log("Found location")
+      } 
+    } catch {
+      console.log("Couldn't get location")
+    }
+
+    try {
+      if (data !== null) {
+        setweather(JSON.parse(data))
+      }
+
+      
+
+    } catch {
+      console.log("Couldn't get initial data!!!")
+    }
+
+
+
+
+  }, [])
+
+  useEffect(() => {
+    window.localStorage.setItem('weatherData', JSON.stringify(weather))
+  }, [weather])
+
+
 
   useEffect(() => {
     const date = new Date()
@@ -67,10 +116,12 @@ function App() {
   //   fecthAt10()
   // }, [weather])
 
-  
+
   const getGeolocation = async () => {
-    const res = await fetch('http://ip-api.com/json/')
-    return res.json()
+    // const res = await fetch('http://ip-api.com/json/')
+    const res = await fetch('https://geolocation-db.com/json/d802faa0-10bd-11ec-b2fe-47a0872c6708')
+    const data = res.json()
+    return data
   }
 
 
@@ -245,11 +296,11 @@ function App() {
   }
 
   const getDayForecast = () => {
-    
-    const index = [0,1,2]
 
-    return(index.map((x) =>
-     
+    const index = [0, 1, 2]
+
+    return (index.map((x) =>
+
       <ForecastDay forecast={weather?.forecast.forecastday[x]} day={getFormattedDay(exactDate.day + x) || ''}
         date={exactDate.date + x} />
     ))
