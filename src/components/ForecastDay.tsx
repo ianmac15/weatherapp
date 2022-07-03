@@ -1,5 +1,5 @@
-import { forecastdayType, weatherType } from "../App"
-import { voidStringType, numberString } from "../types-interfaces"
+import { forecastdayType } from "../types-interfaces"
+
 
 
 
@@ -14,7 +14,7 @@ const ForecastDay = ({ forecast, day, date }: properties) => {
 
     <div className="weather-container4">
       <div className="weather-container5">
-        <div style={{"padding":"1rem"}}>{day}</div>
+        <div style={{ "padding": "1rem" }}>{day}</div>
         <div>{date}</div>
       </div>
       <div className="weather-container5">

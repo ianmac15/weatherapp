@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import ForecastDay from "./components/ForecastDay";
-import { geolocationType } from "./types-interfaces"
-
+import ForecastCity from "./components/ForecastCity";
+import { geolocationType, dateType, forecastdayType, linkProperties, weatherType } from "./types-interfaces"
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
+import * as weatherFuncs from "./WeatherFunctions"
 
 function App() {
 
-  const [weather, setweather] = useState<weatherType>()
+  const [weather, setWeather] = useState<weatherType>()
   // const [forecast, setForecast] = useState<weatherType>()
   const [dayForecast, setDayForecast] = useState<forecastdayType>()
   const [geolocation, setGeolocation] = useState<geolocationType>(
@@ -40,57 +42,83 @@ function App() {
     seconds: 0
   })
 
+  
 
-  useEffect(() => {
-
-    
-
-    const data = window.localStorage.getItem('weatherData')
-
+  const cityLocation = () => {
     try {
-      if (!data) {
-        const getLocation = async () => {
-          const geolocation:geolocationType = await getGeolocation()
-          setGeolocation(geolocation)
-        }
-  
-        getLocation()
-        console.log(geolocation)
-       
-        setApiParameters({ ...apiParameters, cityOrLatLon: geolocation?.city })
-  
-        const getInitialWeather = async () => {
-          const data2: weatherType = await getweatherFromApi(apiParameters)
-          setweather(data2)
-        }
-  
-        getInitialWeather()
 
-        console.log("Found location")
-      } 
+      const getLocation = async () => {
+        const geolocation: geolocationType = await getGeolocation()
+        setGeolocation(geolocation)
+      }
+
+      getLocation()
+      console.log(geolocation)
+
+      setApiParameters({ ...apiParameters, cityOrLatLon: geolocation?.city })
+
+      const getInitialWeather = async () => {
+        const data2: weatherType = await getWeatherFromApi(apiParameters)
+        setWeather(data2)
+      }
+
+      getInitialWeather()
+
+      console.log("Found location")
+
     } catch {
       console.log("Couldn't get location")
     }
 
+    getWeather()
+  }
+
+  const getWeatherFromLocalStorage = () => {
+    const data = window.localStorage.getItem('weatherData')
+
     try {
       if (data !== null) {
-        setweather(JSON.parse(data))
+        setWeather(JSON.parse(data))
       }
+    } catch {
+      console.log("Couldn't get initial data!!!")
+    }
+  }
 
-      
+  const getCityFromLocalStorage = () => {
+    const data = window.localStorage.getItem('cityData')
 
+    try {
+      if (data !== null) {
+        setApiParameters({...apiParameters,cityOrLatLon:JSON.parse(data)})
+      }
     } catch {
       console.log("Couldn't get initial data!!!")
     }
 
+    getWeather()
+  }
+
+  // useEffect(() => {
+
+  //   const data = window.localStorage.getItem('weatherData')
+
+  //   try {
+  //     if (data !== null) {
+  //       setWeather(JSON.parse(data))
+  //     }
 
 
 
-  }, [])
+  //   } catch {
+  //     console.log("Couldn't get initial data!!!")
+  //   }
 
-  useEffect(() => {
-    window.localStorage.setItem('weatherData', JSON.stringify(weather))
-  }, [weather])
+  // }, [])
+
+  // useEffect(() => {
+  //   window.localStorage.setItem('weatherData', JSON.stringify(weather))
+  // }, [weather])
 
 
 
@@ -111,7 +139,7 @@ function App() {
 
   // useEffect(() =>  {
   //   const fecthAt10 = async () => {
-  //     setTimeout( await getweatherFromApi(apiParameters), 1000)
+  //     setTimeout( await getWeatherFromApi(apiParameters), 1000)
   //   }
   //   fecthAt10()
   // }, [weather])
@@ -125,7 +153,7 @@ function App() {
   }
 
 
-  const getweatherFromApi = async (apiParam: linkProperties) => {
+  const getWeatherFromApi = async (apiParam: linkProperties) => {
     const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
     // const res = await fetch(`http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
     // const res = await fetch('http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no')
@@ -138,8 +166,8 @@ function App() {
     const data = await res.json()
     return data
   }
-
-  const getweather = async (e: React.FormEvent<HTMLFormElement>) => {
+  
+  const getWeather = async (e: React.FormEvent<HTMLFormElement>) => {
 
     try {
       e.preventDefault()
@@ -149,7 +177,7 @@ function App() {
         return
       }
 
-      const data: weatherType = await getweatherFromApi(apiParameters)
+      const data: weatherType = await getWeatherFromApi(apiParameters)
       // const data2: forecastType = await getForecastFromApi(apiParameters)
 
       if (data.location.name === null) {
@@ -158,7 +186,7 @@ function App() {
       }
 
 
-      setweather(data)
+      setWeather(data)
       // setForecast(data2)
 
       setApiParameters({
@@ -168,6 +196,10 @@ function App() {
         alerts: "no"
 
       })
+
+      
+      // navigate("/city")
+
     } catch {
       alert("Enter a valid city!")
       setApiParameters({
@@ -183,7 +215,7 @@ function App() {
 
   }
 
-  const getWindDir = (windDir: string | undefined) => {
+  const getWindDir = (windDir?: string) => {
     if (typeof windDir === 'string') {
       try {
         let newString = ""
@@ -196,8 +228,11 @@ function App() {
         return newString
       } catch {
         console.log('Invalid Wind Direction')
+
       }
     }
+
+    return ''
   }
 
   const getFormattedDay = (day: number) => {
@@ -308,49 +343,66 @@ function App() {
 
   }
 
+
   return (
-    <div className="main-container">
-      <form className="main-container form1" onSubmit={getweather}>
-        <input placeholder="Enter city name" className="input1"
-          value={apiParameters.cityOrLatLon} type="text" onChange={(e) => setApiParameters({ ...apiParameters, cityOrLatLon: e.target.value })}></input>
-        <input type="submit" className="btn" value="Enter" />
-      </form>
-      <div className="weather-container">
-        <div className="weather-container1">
-          <div className="city-info city-time">
-            <div>{weather?.location.name}, {weather?.location.region}, {weather?.location.country}</div>
-            <div>{getFormattedDate()}</div>
-            <div>{getTime()}</div>
-          </div>
-          <div className="city-info">
-            <div className="weather-info" >
-              <strong>The Weather right now</strong>
-              <div className="temp">
-                <div >{weather?.current.condition.text}</div>
-                <img src={weather?.current.condition.icon} />
-              </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<ForecastCity weather={weather} getWeather={getWeather}
+          getDayForecast={getDayForecast} getFormattedDate={getFormattedDate} getTime={getTime}
+          getWindDir={getWindDir} apiParameters={apiParameters}
+          setApiParameters={setApiParameters} findCity={cityLocation} />} />
+        <Route path="/city" element={<ForecastCity weather={weather} getWeather={getWeather}
+          getDayForecast={getDayForecast} getFormattedDate={getFormattedDate} getTime={getTime}
+          getWindDir={getWindDir} apiParameters={apiParameters}
+          setApiParameters={setApiParameters} findCity={getCityFromLocalStorage} />} />
+      </Routes>
+    </Router>)
 
-              <div>Temperature: {weather?.current.temp_c} &deg; C</div>
-              <div >Wind speed: {weather?.current.wind_kph} km/h</div>
-              <div >Wind direction: {getWindDir(weather?.current.wind_dir)} </div>
-              <div >Humidity: {weather?.current.humidity} %</div>
-              <div>Pressure: {weather?.current.pressure_mb} millibars</div>
-              <div> Precipitation: {weather?.current.precip_mm} mm</div>
-            </div>
-          </div>
-        </div>
-        <div className="weather-container2">
-          <div className="weather-container3">
-            {getDayForecast()}
-          </div>
-          <div className="weather-container3">
 
-          </div>
-        </div>
-      </div>
-    </div>
 
-  );
+
+  // <div className="main-container">
+  //   <form className="main-container form1" onSubmit={getWeather}>
+  //     <input placeholder="Enter city name" className="input1"
+  //       value={apiParameters.cityOrLatLon} type="text" onChange={(e) => setApiParameters({ ...apiParameters, cityOrLatLon: e.target.value })}></input>
+  //     <input type="submit" className="btn" value="Enter" />
+  //   </form>
+  //   <div className="weather-container">
+  //     <div className="weather-container1">
+  //       <div className="city-info city-time">
+  //         <div>{weather?.location.name}, {weather?.location.region}, {weather?.location.country}</div>
+  //         <div>{getFormattedDate()}</div>
+  //         <div>{getTime()}</div>
+  //       </div>
+  //       <div className="city-info">
+  //         <div className="weather-info" >
+  //           <strong>The Weather right now</strong>
+  //           <div className="temp">
+  //             <div >{weather?.current.condition.text}</div>
+  //             <img src={weather?.current.condition.icon} />
+  //           </div>
+
+  //           <div>Temperature: {weather?.current.temp_c} &deg; C</div>
+  //           <div >Wind speed: {weather?.current.wind_kph} km/h</div>
+  //           <div >Wind direction: {getWindDir(weather?.current.wind_dir)} </div>
+  //           <div >Humidity: {weather?.current.humidity} %</div>
+  //           <div>Pressure: {weather?.current.pressure_mb} millibars</div>
+  //           <div> Precipitation: {weather?.current.precip_mm} mm</div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //     <div className="weather-container2">
+  //       <div className="weather-container3">
+  //         {getDayForecast()}
+  //       </div>
+  //       <div className="weather-container3">
+
+  //       </div>
+  //     </div>
+  //   </div>
+  // </div>
+
+
 }
 
 // interface weatherType {
@@ -395,132 +447,7 @@ function App() {
 //   }
 // }
 
-interface linkProperties {
-  cityOrLatLon: string
-  days: number
-  aqi: string
-  alerts: string
-}
 
-export interface weatherType {
-  location: {
-    name: string
-    region: string
-    country: string
-    lat: number
-    lon: number
-    tz_id: string
-    localtime_epoch: number
-    localtime: string
-  }
-  current: {
-    last_updated_epoch: number
-    last_updated: string
-    temp_c: number
-    temp_f: number
-    is_day: number
-    condition: {
-      text: string
-      icon: string
-      code: number
-    }
-    wind_mph: number
-    wind_kph: number
-    wind_degree: number
-    wind_dir: string
-    pressure_mb: number
-    pressure_in: number
-    precip_mm: number
-    precip_in: number
-    humidity: number
-    cloud: number
-    feelslike_c: number
-    feelslike_f: number
-    vis_km: number
-    vis_miles: number
-    uv: number
-    gust_mph: number
-    gust_kph: number
-  }
-  forecast: {
-    forecastday: forecastdayType[]
-  }
-}
-
-export interface forecastdayType {
-
-  date: number
-  day: {
-    maxtemp_c: number
-    mintemp_c: number
-    maxwind_kph: number
-    totalprecip_mm: number
-    avghumidity: number
-    daily_chance_of_rain: number
-    daily_chance_of_snow: number
-    condition: {
-      text: string
-      icon: string
-    }
-  }
-
-  astro: {
-    sunrise: string
-    sunset: string
-    moonrise: string
-    moonset: string
-    moon_phase: string
-    moon_illumination: string
-  }
-  hour: [{
-    time: string
-    temp_c: number
-    temp_f: number
-    is_day: number
-    condition: {
-      text: string
-      icon: string
-    }
-    wind_mph: number
-    wind_kph: number
-    wind_degree: number
-    wind_dir: string
-    pressure_mb: number
-    pressure_in: number
-    precip_mm: number
-    precip_in: number
-    humidity: number
-    cloud: number
-    feelslike_c: number
-    feelslike_f: number
-    vis_km: number
-    vis_miles: number
-    uv: number
-    gust_mph: number
-    gust_kph: number
-    windchill_c: number
-    windchill_f: number
-    heatindex_c: number
-    heatindex_f: number
-    dewpoint_c: number
-    dewpoint_f: number
-    will_it_rain: number
-    chance_of_rain: number
-    will_it_snow: number
-    chance_of_snow: number
-  }]
-
-}
-
-interface dateType {
-  day: number
-  date: number
-  month: number
-  year: number
-  hours: number
-  minutes: number
-  seconds: number
-}
 
 
 
