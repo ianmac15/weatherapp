@@ -70,7 +70,7 @@ function App() {
       console.log("Couldn't get location")
     }
 
-    getWeather()
+    // getWeather()
   }
 
   const getWeatherFromLocalStorage = () => {
@@ -96,7 +96,7 @@ function App() {
       console.log("Couldn't get initial data!!!")
     }
 
-    getWeather()
+    // getWeather()
   }
 
   // useEffect(() => {

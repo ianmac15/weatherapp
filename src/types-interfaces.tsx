@@ -36,9 +36,8 @@ export interface linkProperties {
   alerts: string
 }
 
-export interface weatherType {
-  location: {
-    name: string
+export interface locationInterface {
+  name: string
     region: string
     country: string
     lat: number
@@ -46,9 +45,10 @@ export interface weatherType {
     tz_id: string
     localtime_epoch: number
     localtime: string
-  }
-  current: {
-    last_updated_epoch: number
+}
+
+export interface currentInterface {
+  last_updated_epoch: number
     last_updated: string
     temp_c: number
     temp_f: number
@@ -75,10 +75,16 @@ export interface weatherType {
     uv: number
     gust_mph: number
     gust_kph: number
-  }
-  forecast: {
-    forecastday: forecastdayType[]
-  }
+}
+
+export interface forecastInterface {
+  forecastday: forecastdayType[]
+}
+
+export interface weatherType {
+  location: locationInterface
+  current: currentInterface
+  forecast: forecastInterface
 }
 
 export interface forecastdayType {
