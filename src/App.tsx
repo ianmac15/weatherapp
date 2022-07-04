@@ -4,12 +4,15 @@ import ForecastCity from "./components/ForecastCity";
 import { geolocationType, dateType, forecastdayType, linkProperties, weatherType } from "./types-interfaces"
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
 import * as weatherFuncs from "./WeatherFunctions"
+import { useWeather } from "./hooks/useWeather";
 
 function App() {
 
-  const [weather, setWeather] = useState<weatherType>()
+  // const [weather, setWeather] = useState<weatherType>()
   // const [forecast, setForecast] = useState<weatherType>()
-  const [dayForecast, setDayForecast] = useState<forecastdayType>()
+  // const [dayForecast, setDayForecast] = useState<forecastdayType>()
+
+  
   const [geolocation, setGeolocation] = useState<geolocationType>(
     {
       country_code: "",
@@ -32,6 +35,9 @@ function App() {
 
     }
   )
+
+  const [weather, setWeather] = useWeather(apiParameters)
+
   const [exactDate, setExactDate] = useState<dateType>({
     day: 0,
     date: 0,
@@ -99,26 +105,26 @@ function App() {
     // getWeather()
   }
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   const data = window.localStorage.getItem('weatherData')
+    const data = window.localStorage.getItem('weatherData')
 
-  //   try {
-  //     if (data !== null) {
-  //       setWeather(JSON.parse(data))
-  //     }
+    try {
+      if (data !== null) {
+        setWeather(JSON.parse(data))
+      }
 
 
 
-  //   } catch {
-  //     console.log("Couldn't get initial data!!!")
-  //   }
+    } catch {
+      console.log("Couldn't get initial data!!!")
+    }
 
-  // }, [])
+  }, [])
 
-  // useEffect(() => {
-  //   window.localStorage.setItem('weatherData', JSON.stringify(weather))
-  // }, [weather])
+  useEffect(() => {
+    window.localStorage.setItem('weatherData', JSON.stringify(weather))
+  }, [weather])
 
 
 
