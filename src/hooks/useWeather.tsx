@@ -4,7 +4,26 @@ import { weatherType, linkProperties } from "../types-interfaces"
 
 export function useWeather(apiParameters: linkProperties): [weatherType, (e: React.FormEvent<HTMLFormElement>) => Promise<void>] {
 
-    const [weather, setWeather] = useState<weatherType>()
+    const [weather, setWeather] = useState<weatherType>(
+        {
+            location: {
+                name: '',
+                region: '',
+                country: '',
+                lat: 0,
+                lon: 0,
+                tz_id: '',
+                localtime_epoch: 0,
+                localtime: ''
+            },
+            current:{
+
+            },
+            forecast:{
+                
+            }
+        }
+    )
 
 
 

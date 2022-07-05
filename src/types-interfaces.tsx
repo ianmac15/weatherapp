@@ -3,7 +3,7 @@ export interface voidStringType {
 }
 
 export interface voidvoidType {
-  (param:void):void
+  (param: void): void
 }
 
 export interface numberString {
@@ -11,11 +11,11 @@ export interface numberString {
 }
 
 export interface stringString {
-  (param?: string):string
+  (param?: string): string
 }
 
 export interface voidJSX {
-  (param:void):JSX.Element[]
+  (param: void): JSX.Element[]
 }
 
 export interface geolocationType {
@@ -38,43 +38,43 @@ export interface linkProperties {
 
 export interface locationInterface {
   name: string
-    region: string
-    country: string
-    lat: number
-    lon: number
-    tz_id: string
-    localtime_epoch: number
-    localtime: string
+  region: string
+  country: string
+  lat: number
+  lon: number
+  tz_id: string
+  localtime_epoch: number
+  localtime: string
 }
 
 export interface currentInterface {
   last_updated_epoch: number
-    last_updated: string
-    temp_c: number
-    temp_f: number
-    is_day: number
-    condition: {
-      text: string
-      icon: string
-      code: number
-    }
-    wind_mph: number
-    wind_kph: number
-    wind_degree: number
-    wind_dir: string
-    pressure_mb: number
-    pressure_in: number
-    precip_mm: number
-    precip_in: number
-    humidity: number
-    cloud: number
-    feelslike_c: number
-    feelslike_f: number
-    vis_km: number
-    vis_miles: number
-    uv: number
-    gust_mph: number
-    gust_kph: number
+  last_updated: string
+  temp_c: number
+  temp_f: number
+  is_day: number
+  condition: {
+    text: string
+    icon: string
+    code: number
+  }
+  wind_mph: number
+  wind_kph: number
+  wind_degree: number
+  wind_dir: string
+  pressure_mb: number
+  pressure_in: number
+  precip_mm: number
+  precip_in: number
+  humidity: number
+  cloud: number
+  feelslike_c: number
+  feelslike_f: number
+  vis_km: number
+  vis_miles: number
+  uv: number
+  gust_mph: number
+  gust_kph: number
 }
 
 export interface forecastInterface {
