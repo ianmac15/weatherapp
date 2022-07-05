@@ -13,6 +13,7 @@ export class Weather implements weatherType{
     }
 
     
+    
 
      
 }

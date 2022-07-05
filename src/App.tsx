@@ -36,7 +36,7 @@ function App() {
     }
   )
 
-  const [weather, setWeather] = useWeather(apiParameters)
+  const [weather, weatherCall] = useWeather(apiParameters)
 
   const [exactDate, setExactDate] = useState<dateType>({
     day: 0,
@@ -159,67 +159,67 @@ function App() {
   }
 
 
-  const getWeatherFromApi = async (apiParam: linkProperties) => {
-    const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
-    // const res = await fetch(`http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
-    // const res = await fetch('http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no')
-    const data = res.json()
-    return data
-  }
+  // const getWeatherFromApi = async (apiParam: linkProperties) => {
+  //   const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
+  //   // const res = await fetch(`http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
+  //   // const res = await fetch('http://api.weatherapi.com/v1/weather.json?key=7000cd0d3d2c419b99463816221806&q=Pyrgos&days=1&aqi=no&alerts=no')
+  //   const data = res.json()
+  //   return data
+  // }
 
-  const getForecastFromApi = async (apiParam: linkProperties) => {
-    const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
-    const data = await res.json()
-    return data
-  }
+  // const getForecastFromApi = async (apiParam: linkProperties) => {
+  //   const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParam.cityOrLatLon}&days=${apiParam.days}&aqi=${apiParam.aqi}&alerts=${apiParam.alerts}`)
+  //   const data = await res.json()
+  //   return data
+  // }
   
-  const getWeather = async (e: React.FormEvent<HTMLFormElement>) => {
+  // const getWeather = async (e: React.FormEvent<HTMLFormElement>) => {
 
-    try {
-      e.preventDefault()
+  //   try {
+  //     e.preventDefault()
 
-      if (!apiParameters.cityOrLatLon) {
-        alert("Enter a valid city!")
-        return
-      }
+  //     if (!apiParameters.cityOrLatLon) {
+  //       alert("Enter a valid city!")
+  //       return
+  //     }
 
-      const data: weatherType = await getWeatherFromApi(apiParameters)
-      // const data2: forecastType = await getForecastFromApi(apiParameters)
+  //     const data: weatherType = await getWeatherFromApi(apiParameters)
+  //     // const data2: forecastType = await getForecastFromApi(apiParameters)
 
-      if (data.location.name === null) {
-        alert("Enter a valid city!")
-        return
-      }
+  //     if (data.location.name === null) {
+  //       alert("Enter a valid city!")
+  //       return
+  //     }
 
 
-      setWeather(data)
-      // setForecast(data2)
+  //     setWeather(data)
+  //     // setForecast(data2)
 
-      setApiParameters({
-        cityOrLatLon: "",
-        days: 3,
-        aqi: "no",
-        alerts: "no"
+  //     setApiParameters({
+  //       cityOrLatLon: "",
+  //       days: 3,
+  //       aqi: "no",
+  //       alerts: "no"
 
-      })
+  //     })
 
       
-      // navigate("/city")
+  //     // navigate("/city")
 
-    } catch {
-      alert("Enter a valid city!")
-      setApiParameters({
-        cityOrLatLon: "",
-        days: 3,
-        aqi: "no",
-        alerts: "no"
+  //   } catch {
+  //     alert("Enter a valid city!")
+  //     setApiParameters({
+  //       cityOrLatLon: "",
+  //       days: 3,
+  //       aqi: "no",
+  //       alerts: "no"
 
-      })
+  //     })
 
-    }
+  //   }
 
 
-  }
+  // }
 
   const getWindDir = (windDir?: string) => {
     if (typeof windDir === 'string') {

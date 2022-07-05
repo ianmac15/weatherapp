@@ -87,6 +87,7 @@ export interface weatherType {
   forecast: forecastInterface
 }
 
+
 export interface forecastdayType {
 
   date: number

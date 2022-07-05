@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
+import { Weather } from "../Models/Weather"
 import { weatherType, linkProperties } from "../types-interfaces"
 
-export function useWeather(apiParameters: linkProperties) {
+export function useWeather(apiParameters: linkProperties): [weatherType, (e: React.FormEvent<HTMLFormElement>) => Promise<void>] {
 
     const [weather, setWeather] = useState<weatherType>()
 
@@ -13,54 +14,51 @@ export function useWeather(apiParameters: linkProperties) {
         return data
     }
 
-    useEffect(() => {
-        const getWeather = async () => {
-
-            try {
-                // e.preventDefault()
-
-                if (!apiParameters.cityOrLatLon) {
-                    alert("Enter a valid city!")
-                    return
-                }
-
-                const data: weatherType = await getWeatherFromApi()
-                // const data2: forecastType = await getForecastFromApi(apiParameters)
-
-                if (data.location.name === null) {
-                    alert("Enter a valid city!")
-                    return
-                }
 
 
-                setWeather(data)
-                // setForecast(data2)
 
-                apiParameters = {
-                    cityOrLatLon: "",
-                    days: 3,
-                    aqi: "no",
-                    alerts: "no"
-                }
+    const weatherCall = async (e: React.FormEvent<HTMLFormElement>) => {
 
+        try {
+            e.preventDefault()
 
-                // navigate("/city")
-
-            } catch {
+            if (!apiParameters.cityOrLatLon) {
                 alert("Enter a valid city!")
-                apiParameters = {
-                    cityOrLatLon: "",
-                    days: 3,
-                    aqi: "no",
-                    alerts: "no"
-                }
+                return
+            }
+
+            const data: weatherType = await getWeatherFromApi()
+            // const data2: forecastType = await getForecastFromApi(apiParameters)
+
+            if (data.location.name === null) {
+                alert("Enter a valid city!")
+                return
+            }
+
+
+            setWeather(data)
+            // setForecast(data2)
+
+            apiParameters = {
+                cityOrLatLon: "",
+                days: 3,
+                aqi: "no",
+                alerts: "no"
+            }
+
+
+            // navigate("/city")
+
+        } catch {
+            alert("Enter a valid city!")
+            apiParameters = {
+                cityOrLatLon: "",
+                days: 3,
+                aqi: "no",
+                alerts: "no"
             }
         }
+    }
 
-        getWeather()
-
-    }, [apiParameters])
-
-
-    return [weather, setWeather]
+    return [weather, weatherCall]
 }
