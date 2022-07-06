@@ -84,7 +84,7 @@ export interface forecastInterface {
 export interface weatherType {
   location: locationInterface
   current: currentInterface
-  forecast: forecastInterface
+  forecast: forecastdayType[]
 }
 
 

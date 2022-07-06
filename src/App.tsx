@@ -36,7 +36,7 @@ function App() {
     }
   )
 
-  const [weather, weatherCall] = useWeather(apiParameters)
+  const [weather, weatherCall] = useWeather(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParameters.cityOrLatLon}&days=${apiParameters.days}&aqi=${apiParameters.aqi}&alerts=${apiParameters.alerts}`)
 
   const [exactDate, setExactDate] = useState<dateType>({
     day: 0,
@@ -353,11 +353,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<ForecastCity weather={weather} getWeather={getWeather}
+        <Route path="/" element={<ForecastCity weather={weather} getWeather={weatherCall}
           getDayForecast={getDayForecast} getFormattedDate={getFormattedDate} getTime={getTime}
           getWindDir={getWindDir} apiParameters={apiParameters}
           setApiParameters={setApiParameters} findCity={cityLocation} />} />
-        <Route path="/city" element={<ForecastCity weather={weather} getWeather={getWeather}
+        <Route path="/city" element={<ForecastCity weather={weather} getWeather={weatherCall}
           getDayForecast={getDayForecast} getFormattedDate={getFormattedDate} getTime={getTime}
           getWindDir={getWindDir} apiParameters={apiParameters}
           setApiParameters={setApiParameters} findCity={getCityFromLocalStorage} />} />

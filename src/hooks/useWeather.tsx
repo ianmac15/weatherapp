@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Weather } from "../Models/Weather"
 import { weatherType, linkProperties } from "../types-interfaces"
 
-export function useWeather(apiParameters: linkProperties): [weatherType, (e: React.FormEvent<HTMLFormElement>) => Promise<void>] {
+export function useWeather(url: string): [weatherType, (e: React.FormEvent<HTMLFormElement>) => Promise<void>] {
 
     const [weather, setWeather] = useState<weatherType>(
         {
@@ -16,19 +16,104 @@ export function useWeather(apiParameters: linkProperties): [weatherType, (e: Rea
                 localtime_epoch: 0,
                 localtime: ''
             },
-            current:{
-
+            current: {
+                last_updated_epoch: 0,
+                last_updated: '',
+                temp_c: 0,
+                temp_f: 0,
+                is_day: 0,
+                condition: {
+                    text: '',
+                    icon: '',
+                    code: 0
+                },
+                wind_mph: 0,
+                wind_kph: 0,
+                wind_degree: 0,
+                wind_dir: '',
+                pressure_mb: 0,
+                pressure_in: 0,
+                precip_mm: 0,
+                precip_in: 0,
+                humidity: 0,
+                cloud: 0,
+                feelslike_c: 0,
+                feelslike_f: 0,
+                vis_km: 0,
+                vis_miles: 0,
+                uv: 0,
+                gust_mph: 0,
+                gust_kph: 0,
             },
-            forecast:{
-                
-            }
+            forecast: [{
+                date: 0,
+                day: {
+                    maxtemp_c: 0,
+                    mintemp_c: 0,
+                    maxwind_kph: 0,
+                    totalprecip_mm: 0,
+                    avghumidity: 0,
+                    daily_chance_of_rain: 0,
+                    daily_chance_of_snow: 0,
+                    condition: {
+                        text: '',
+                        icon: ''
+                    }
+                },
+
+                astro: {
+                    sunrise: '',
+                    sunset: '',
+                    moonrise: '',
+                    moonset: '',
+                    moon_phase: '',
+                    moon_illumination: '',
+                },
+                hour: [{
+                    time: '',
+                    temp_c: 0,
+                    temp_f: 0,
+                    is_day: 0,
+                    condition: {
+                        text: '',
+                        icon: ''
+                    },
+                    wind_mph: 0,
+                    wind_kph: 0,
+                    wind_degree: 0,
+                    wind_dir: '',
+                    pressure_mb: 0,
+                    pressure_in: 0,
+                    precip_mm: 0,
+                    precip_in: 0,
+                    humidity: 0,
+                    cloud: 0,
+                    feelslike_c: 0,
+                    feelslike_f: 0,
+                    vis_km: 0,
+                    vis_miles: 0,
+                    uv: 0,
+                    gust_mph: 0,
+                    gust_kph: 0,
+                    windchill_c: 0,
+                    windchill_f: 0,
+                    heatindex_c: 0,
+                    heatindex_f: 0,
+                    dewpoint_c: 0,
+                    dewpoint_f: 0,
+                    will_it_rain: 0,
+                    chance_of_rain: 0,
+                    will_it_snow: 0,
+                    chance_of_snow: 0,
+                }]
+            }]
         }
     )
 
 
 
     const getWeatherFromApi = async () => {
-        const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParameters.cityOrLatLon}&days=${apiParameters.days}&aqi=${apiParameters.aqi}&alerts=${apiParameters.alerts}`)
+        const res = await fetch(url)
         const data = res.json()
         return data
     }
@@ -58,24 +143,24 @@ export function useWeather(apiParameters: linkProperties): [weatherType, (e: Rea
             setWeather(data)
             // setForecast(data2)
 
-            apiParameters = {
-                cityOrLatLon: "",
-                days: 3,
-                aqi: "no",
-                alerts: "no"
-            }
+            // apiParameters = {
+            //     cityOrLatLon: "",
+            //     days: 3,
+            //     aqi: "no",
+            //     alerts: "no"
+            // }
 
 
             // navigate("/city")
 
         } catch {
             alert("Enter a valid city!")
-            apiParameters = {
-                cityOrLatLon: "",
-                days: 3,
-                aqi: "no",
-                alerts: "no"
-            }
+            // apiParameters = {
+            //     cityOrLatLon: "",
+            //     days: 3,
+            //     aqi: "no",
+            //     alerts: "no"
+            // }
         }
     }
 
