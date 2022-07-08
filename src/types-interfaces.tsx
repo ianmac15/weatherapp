@@ -90,7 +90,7 @@ export interface weatherType {
 
 export interface forecastdayType {
 
-  date: number
+  date: string
   day: {
     maxtemp_c: number
     mintemp_c: number

@@ -15,7 +15,23 @@ const ForecastCity = () => {
     const [numberOfDays, setNumberOfDays] = useState([0, 1, 2])
 
    
+    const getDayForecast = () => {
 
+        const index = [0, 1, 2]
+        const days = index.map((x)=>weather.forecast.forecastday[x].date)
+    
+        return (days.map((x, i) =>
+            
+          <ForecastDay forecast={weather?.forecast.forecastday[i]} day={getFormattedDay(exactDate.day) || ''}
+            date={exactDate.date} />
+        ))
+
+        for (let i = 0; i < 3; i++) {
+            setDay(weather.forecast.forecastday[i].date);
+        }
+        
+    
+      }
 
 
 
@@ -52,9 +68,9 @@ const ForecastCity = () => {
                 </div>
                 <div className="weather-container2">
                     <div className="weather-container3">
-                        {numberOfDays.map((x) => {setDay(weather.forecast.forecastday[x]);
+                        {numberOfDays.map((x) => 
                             <ForecastDay forecast={weather.forecast.forecastday[x]} day={getFormattedDay(exactDate.day + x) || ''}
-                                date={exactDate.date + x} />}
+                                date={exactDate.date + x} />
                         )}
                     </div>
                     <div className="weather-container3">
