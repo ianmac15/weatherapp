@@ -168,25 +168,7 @@ function App() {
 
   // }
 
-  const getWindDir = (windDir?: string) => {
-    if (typeof windDir === 'string') {
-      try {
-        let newString = ""
-        for (let i = 0; i < windDir.length; i++) {
-          if (windDir[i] == 'N') newString += "North "
-          if (windDir[i] == 'E') newString += "East "
-          if (windDir[i] == 'S') newString += "South "
-          if (windDir[i] == 'W') newString += "West "
-        }
-        return newString
-      } catch {
-        console.log('Invalid Wind Direction')
-
-      }
-    }
-
-    return ''
-  }
+  
 
   
 
@@ -215,14 +197,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<ForecastCity 
-          getDayForecast={getDayForecast} getFormattedDate={getFormattedDate} getTime={getTime}
-          getWindDir={getWindDir}
-           />} />
-        <Route path="/city" element={<ForecastCity 
-          getDayForecast={getDayForecast} getFormattedDate={getFormattedDate} getTime={getTime}
-          getWindDir={getWindDir}
-           />} />
+        <Route path="/" element={<ForecastCity />} />
+        <Route path="/city" element={<ForecastCity />} />
       </Routes>
     </Router>)
 

@@ -1,46 +1,37 @@
 import { useEffect, useState } from 'react'
+import { useDateAndTime } from '../hooks/useDateAndTime'
 import { useUrl } from '../hooks/useUrl'
 import { useWeather } from '../hooks/useWeather'
+import { getWindDir } from '../hooks/useWind'
 import { geolocationType, dateType, forecastdayType, numberString, linkProperties, weatherType, voidvoidType, voidStringType, stringString, voidJSX } from '../types-interfaces'
+import ForecastDay from './ForecastDay'
 
-const ForecastCity = ({
-    getFormattedDate, getTime, getWindDir }: properties) => {
+const ForecastCity = () => {
 
-    
-    
     const [city, setCity] = useState('')
     const [url, setUrl] = useUrl(city)
     const [weather, setWeather] = useWeather(url)
+    const [dateAndTime, exactDate, getFormattedDay, setDay] = useDateAndTime()
+    const [numberOfDays, setNumberOfDays] = useState([0, 1, 2])
 
-    const getDayForecast = () => {
-
-        const index = [0, 1, 2]
-    
-        return (index.map((x) =>
-    
-          <ForecastDay forecast={weather?.forecast[x]} day={getFormattedDay(exactDate.day + x) || ''}
-            date={exactDate.date + x} />
-        ))
-    
-    
-      }
+   
 
 
-    
+
 
     return (
         <div className="main-container">
             <form className="main-container form1" onSubmit={setWeather}>
                 <input placeholder="Enter city name" className="input1"
-                    value={city} type="text" onChange={(e) => {setCity(e.target.value); setUrl()}}></input>
+                    value={city} type="text" onChange={(e) => { setCity(e.target.value); setUrl() }}></input>
                 <input type="submit" className="btn" value="Enter" />
             </form>
             <div className="weather-container">
                 <div className="weather-container1">
                     <div className="city-info city-time">
                         <div>{weather?.location.name}, {weather?.location.region}, {weather?.location.country}</div>
-                        <div>{getFormattedDate()}</div>
-                        <div>{getTime()}</div>
+                        <div>{dateAndTime.formattedDate}</div>
+                        <div>{dateAndTime.formattedTime}</div>
                     </div>
                     <div className="city-info">
                         <div className="weather-info" >
@@ -50,18 +41,21 @@ const ForecastCity = ({
                                 <img src={weather?.current.condition.icon} />
                             </div>
 
-                            <div>Temperature: {weather?.current.temp_c} &deg; C</div>
-                            <div >Wind speed: {weather?.current.wind_kph} km/h</div>
-                            <div >Wind direction: {getWindDir(weather?.current.wind_dir)} </div>
-                            <div >Humidity: {weather?.current.humidity} %</div>
-                            <div>Pressure: {weather?.current.pressure_mb} millibars</div>
-                            <div> Precipitation: {weather?.current.precip_mm} mm</div>
+                            <div>Temperature: {weather.current.temp_c} &deg; C</div>
+                            <div >Wind speed: {weather.current.wind_kph} km/h</div>
+                            <div >Wind direction: {getWindDir(weather.current.wind_dir)} </div>
+                            <div >Humidity: {weather.current.humidity} %</div>
+                            <div>Pressure: {weather.current.pressure_mb} millibars</div>
+                            <div> Precipitation: {weather.current.precip_mm} mm</div>
                         </div>
                     </div>
                 </div>
                 <div className="weather-container2">
                     <div className="weather-container3">
-                        {getDayForecast()}
+                        {numberOfDays.map((x) => {setDay(weather.forecast.forecastday[x]);
+                            <ForecastDay forecast={weather.forecast.forecastday[x]} day={getFormattedDay(exactDate.day + x) || ''}
+                                date={exactDate.date + x} />}
+                        )}
                     </div>
                     <div className="weather-container3">
 
@@ -77,10 +71,10 @@ interface properties {
     // getWeather: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
     // apiParameters: linkProperties
     // setApiParameters: React.Dispatch<React.SetStateAction<linkProperties>>
-    getFormattedDate: voidStringType
-    getTime: voidStringType
+    // getFormattedDate: voidStringType
+    // getTime: voidStringType
     getWindDir: stringString
-    getDayForecast: voidJSX
+    // getDayForecast: voidJSX
     // findCity: voidvoidType
 }
 
