@@ -180,6 +180,11 @@ export interface dateType {
 //   as: string
 // }
 
+export interface dateAndtimeInterface {
+  formattedDate: string
+  formattedTime: string
+}
+
 
 
 

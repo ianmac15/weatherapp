@@ -1,24 +1,38 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useUrl } from '../hooks/useUrl'
+import { useWeather } from '../hooks/useWeather'
 import { geolocationType, dateType, forecastdayType, numberString, linkProperties, weatherType, voidvoidType, voidStringType, stringString, voidJSX } from '../types-interfaces'
 
-const ForecastCity = ({ weather, getWeather, apiParameters, setApiParameters,
-    getFormattedDate, getTime, getWindDir, getDayForecast, findCity }: properties) => {
+const ForecastCity = ({
+    getFormattedDate, getTime, getWindDir }: properties) => {
 
-    useEffect(findCity, [])
+    
+    
+    const [city, setCity] = useState('')
+    const [url, setUrl] = useUrl(city)
+    const [weather, setWeather] = useWeather(url)
 
-    // useEffect(() => {
-    //     window.localStorage.setItem('weatherData', JSON.stringify(weather))
-    // }, [weather])
+    const getDayForecast = () => {
 
-    useEffect(() => {
-        window.localStorage.setItem('cityData', JSON.stringify(apiParameters.cityOrLatLon))
-    }, [apiParameters.cityOrLatLon])
+        const index = [0, 1, 2]
+    
+        return (index.map((x) =>
+    
+          <ForecastDay forecast={weather?.forecast[x]} day={getFormattedDay(exactDate.day + x) || ''}
+            date={exactDate.date + x} />
+        ))
+    
+    
+      }
+
+
+    
 
     return (
         <div className="main-container">
-            <form className="main-container form1" onSubmit={getWeather}>
+            <form className="main-container form1" onSubmit={setWeather}>
                 <input placeholder="Enter city name" className="input1"
-                    value={apiParameters.cityOrLatLon} type="text" onChange={(e) => setApiParameters({ ...apiParameters, cityOrLatLon: e.target.value })}></input>
+                    value={city} type="text" onChange={(e) => {setCity(e.target.value); setUrl()}}></input>
                 <input type="submit" className="btn" value="Enter" />
             </form>
             <div className="weather-container">
@@ -59,15 +73,15 @@ const ForecastCity = ({ weather, getWeather, apiParameters, setApiParameters,
 }
 
 interface properties {
-    weather?: weatherType
-    getWeather: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
-    apiParameters: linkProperties
-    setApiParameters: React.Dispatch<React.SetStateAction<linkProperties>>
+    // weather?: weatherType
+    // getWeather: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
+    // apiParameters: linkProperties
+    // setApiParameters: React.Dispatch<React.SetStateAction<linkProperties>>
     getFormattedDate: voidStringType
     getTime: voidStringType
     getWindDir: stringString
     getDayForecast: voidJSX
-    findCity: voidvoidType
+    // findCity: voidvoidType
 }
 
 export default ForecastCity

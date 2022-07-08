@@ -5,6 +5,7 @@ import { geolocationType, dateType, forecastdayType, linkProperties, weatherType
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
 import * as weatherFuncs from "./WeatherFunctions"
 import { useWeather } from "./hooks/useWeather";
+import { useUrl } from "./hooks/useUrl";
 
 function App() {
 
@@ -26,129 +27,75 @@ function App() {
     }
 
   )
-  const [apiParameters, setApiParameters] = useState<linkProperties>(
-    {
-      cityOrLatLon: "",
-      days: 3,
-      aqi: "no",
-      alerts: "no"
-
-    }
-  )
-
-  const [weather, weatherCall] = useWeather(`http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParameters.cityOrLatLon}&days=${apiParameters.days}&aqi=${apiParameters.aqi}&alerts=${apiParameters.alerts}`)
-
-  const [exactDate, setExactDate] = useState<dateType>({
-    day: 0,
-    date: 0,
-    month: 0,
-    year: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  })
+  
 
   
 
-  const cityLocation = () => {
-    try {
+  
 
-      const getLocation = async () => {
-        const geolocation: geolocationType = await getGeolocation()
-        setGeolocation(geolocation)
-      }
+  
 
-      getLocation()
-      console.log(geolocation)
+  // const cityLocation = () => {
+  //   try {
 
-      setApiParameters({ ...apiParameters, cityOrLatLon: geolocation?.city })
+  //     const getLocation = async () => {
+  //       const geolocation: geolocationType = await getGeolocation()
+  //       setGeolocation(geolocation)
+  //     }
 
-      const getInitialWeather = async () => {
-        const data2: weatherType = await getWeatherFromApi(apiParameters)
-        setWeather(data2)
-      }
+  //     getLocation()
+  //     console.log(geolocation)
 
-      getInitialWeather()
+  //     setApiParameters({ ...apiParameters, cityOrLatLon: geolocation?.city })
 
-      console.log("Found location")
+  //     const getInitialWeather = async () => {
+  //       const data2: weatherType = await getWeatherFromApi(apiParameters)
+  //       setWeather(data2)
+  //     }
 
-    } catch {
-      console.log("Couldn't get location")
-    }
+  //     getInitialWeather()
 
-    // getWeather()
-  }
+  //     console.log("Found location")
 
-  const getWeatherFromLocalStorage = () => {
-    const data = window.localStorage.getItem('weatherData')
-
-    try {
-      if (data !== null) {
-        setWeather(JSON.parse(data))
-      }
-    } catch {
-      console.log("Couldn't get initial data!!!")
-    }
-  }
-
-  const getCityFromLocalStorage = () => {
-    const data = window.localStorage.getItem('cityData')
-
-    try {
-      if (data !== null) {
-        setApiParameters({...apiParameters,cityOrLatLon:JSON.parse(data)})
-      }
-    } catch {
-      console.log("Couldn't get initial data!!!")
-    }
-
-    // getWeather()
-  }
-
-  useEffect(() => {
-
-    const data = window.localStorage.getItem('weatherData')
-
-    try {
-      if (data !== null) {
-        setWeather(JSON.parse(data))
-      }
-
-
-
-    } catch {
-      console.log("Couldn't get initial data!!!")
-    }
-
-  }, [])
-
-  useEffect(() => {
-    window.localStorage.setItem('weatherData', JSON.stringify(weather))
-  }, [weather])
-
-
-
-  useEffect(() => {
-    const date = new Date()
-    setExactDate({
-      ...exactDate,
-      day: date.getDay(),
-      date: date.getDate(),
-      month: date.getMonth(),
-      year: date.getFullYear(),
-      hours: date.getHours(),
-      minutes: date.getMinutes(),
-      seconds: date.getSeconds()
-    })
-
-  }, [exactDate])
-
-  // useEffect(() =>  {
-  //   const fecthAt10 = async () => {
-  //     setTimeout( await getWeatherFromApi(apiParameters), 1000)
+  //   } catch {
+  //     console.log("Couldn't get location")
   //   }
-  //   fecthAt10()
-  // }, [weather])
+
+  //   // getWeather()
+  // }
+
+  // const getWeatherFromLocalStorage = () => {
+  //   const data = window.localStorage.getItem('weatherData')
+
+  //   try {
+  //     if (data !== null) {
+  //       setWeather(JSON.parse(data))
+  //     }
+  //   } catch {
+  //     console.log("Couldn't get initial data!!!")
+  //   }
+  // }
+
+  // const getCityFromLocalStorage = () => {
+  //   const data = window.localStorage.getItem('cityData')
+
+  //   try {
+  //     if (data !== null) {
+  //       setApiParameters({...apiParameters,cityOrLatLon:JSON.parse(data)})
+  //     }
+  //   } catch {
+  //     console.log("Couldn't get initial data!!!")
+  //   }
+
+  //   // getWeather()
+  // }
+
+  
+
+
+  
+
+ 
 
 
   const getGeolocation = async () => {
@@ -241,60 +188,7 @@ function App() {
     return ''
   }
 
-  const getFormattedDay = (day: number) => {
-    // switch (new Date().getDay()) {
-    switch (day) {
-      case 0:
-        return "Sunday"
-      case 1:
-        return "Monday"
-      case 2:
-        return "Tuesday"
-      case 3:
-        return "Wednesday"
-      case 4:
-        return "Thursday"
-      case 5:
-        return "Friday"
-      case 6:
-        return "Saturday"
-    }
-  }
-
-  const getFormattedMonth = () => {
-    // switch (new Date().getMonth()) {
-    switch (exactDate.month) {
-      case 0:
-        return "January"
-      case 1:
-        return "February"
-      case 2:
-        return "March"
-      case 3:
-        return "April"
-      case 4:
-        return "May"
-      case 5:
-        return "June"
-      case 6:
-        return "July"
-      case 7:
-        return "Augoust"
-      case 8:
-        return "September"
-      case 9:
-        return "October"
-      case 10:
-        return "November"
-      case 11:
-        return "December"
-    }
-  }
-
-  const getFormattedDate = () => {
-    // const date = new Date()
-    return getFormattedDay(exactDate.day) + " " + exactDate.date + " " + " " + getFormattedMonth() + " " + exactDate.year
-  }
+  
 
   // const getDate2 = (date: string | undefined) => {
   //   if (typeof date === 'string') {
@@ -313,54 +207,22 @@ function App() {
 
   // }
 
-  const getTime = () => {
-    // const date = new Date()
-    // const hours = date.getHours()
-    const hours = exactDate.hours
-    let stringHours = "" + hours
-    if (hours < 10) {
-      stringHours = "0" + stringHours
-    }
-    // const minutes = date.getMinutes()
-    const minutes = exactDate.minutes
-    let stringMins = "" + minutes
-    if (minutes < 10) {
-      stringMins = "0" + stringMins
-    }
-    // const seconds = date.getSeconds()
-    const seconds = exactDate.seconds
-    let stringSecs = "" + seconds
-    if (seconds < 10) {
-      stringSecs = "0" + stringSecs
-    }
-    return stringHours + ":" + stringMins + ":" + stringSecs
-  }
+  
 
-  const getDayForecast = () => {
-
-    const index = [0, 1, 2]
-
-    return (index.map((x) =>
-
-      <ForecastDay forecast={weather?.forecast.forecastday[x]} day={getFormattedDay(exactDate.day + x) || ''}
-        date={exactDate.date + x} />
-    ))
-
-
-  }
+ 
 
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<ForecastCity weather={weather} getWeather={weatherCall}
+        <Route path="/" element={<ForecastCity 
           getDayForecast={getDayForecast} getFormattedDate={getFormattedDate} getTime={getTime}
-          getWindDir={getWindDir} apiParameters={apiParameters}
-          setApiParameters={setApiParameters} findCity={cityLocation} />} />
-        <Route path="/city" element={<ForecastCity weather={weather} getWeather={weatherCall}
+          getWindDir={getWindDir}
+           />} />
+        <Route path="/city" element={<ForecastCity 
           getDayForecast={getDayForecast} getFormattedDate={getFormattedDate} getTime={getTime}
-          getWindDir={getWindDir} apiParameters={apiParameters}
-          setApiParameters={setApiParameters} findCity={getCityFromLocalStorage} />} />
+          getWindDir={getWindDir}
+           />} />
       </Routes>
     </Router>)
 

@@ -1,28 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { weatherType } from "../types-interfaces";
 
-export function useLocalStorage() {
+const getData = (key :string) => {
+  const data = window.localStorage.getItem(key)
 
-    const [data, setData] = useState()
+    try {
+      if (data !== null) {
+        return JSON.parse(data)
+      }
 
-    useEffect(() => {
+    } catch {
+      console.log("Couldn't get initial data!!!")
+    }
+}
 
-        const data = window.localStorage.getItem('weatherData')
-    
-        try {
-          if (data !== null) {
-            setWeather(JSON.parse(data))
-          }
-    
-    
-    
-        } catch {
-          console.log("Couldn't get initial data!!!")
-        }
-    
-      }, [])
-    
-      useEffect(() => {
-        window.localStorage.setItem('weatherData', JSON.stringify(weather))
-      }, [weather])
+export function useLocalStorage(key: string) {
 
+  const [value, setValue] = useState(() => {
+    getData(key)
+  })
+
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  }, [value])
+
+  return [value, setValue]
 }
