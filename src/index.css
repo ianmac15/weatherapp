@@ -12,7 +12,9 @@ html {
 }
 
 body {
-  background-image: url(/images/sunset-tree-lake-nature-art.jpg);
+  /* background-image: url(/images/sunset-tree-lake-nature-art.jpg);*/
+  /* background-image: url('https://api.unsplash.com/search/photos?page=1&query=weather&client_id=rVKv3MJTT8Wmh_hpTGLt1Si59eP0s1IGXDMv2xJb0zM'); */
+  background-image: url('https://api.unsplash.com/collections?id=8240068&page=1&query=weather&client_id=rVKv3MJTT8Wmh_hpTGLt1Si59eP0s1IGXDMv2xJb0zM');
   background-repeat: no-repeat;
   /* background-size: cover; */
   background-position: center;

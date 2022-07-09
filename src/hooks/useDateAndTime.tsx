@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { dateAndtimeInterface, dateType } from "../types-interfaces";
+import { dateAndtimeInterface, dateType, stringNum, weatherType } from "../types-interfaces";
 
 
-export function useDateAndTime(): [dateAndtimeInterface, dateType, (par: number) => string, (par:string)=>void] {
+export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dateType, stringNum, (par: number) => string, (par: string) => void] {
 
   const [DateAndTime, setDateAndTime] = useState<dateAndtimeInterface>({ formattedDate: '', formattedTime: '' })
 
@@ -18,12 +18,12 @@ export function useDateAndTime(): [dateAndtimeInterface, dateType, (par: number)
 
   const [currentDay, setCurrentDay] = useState('')
 
-  function setDate(aDay:string) {
+  function setDate(aDay: string) {
     setCurrentDay(aDay)
   }
 
   useEffect(() => {
-    const date = new Date(currentDay)
+    const date = new Date(weather.forecast.forecastday[0].date)
     setExactDate({
       ...exactDate,
       day: date.getDay(),
@@ -37,33 +37,56 @@ export function useDateAndTime(): [dateAndtimeInterface, dateType, (par: number)
 
   }, [exactDate])
 
+  const [threeDays, setThreeDays] = useState<stringNum>({
+    forecastList: ['','',''],
+    forecastList2: [0,0,0]
+  })
+
+  useEffect(() => {
+    const func3 = () => {
+      let forecastList: string[] = []
+      let forecastList2: number[] = []
+
+      for (let i = 0; i < 3; i++) {
+        const date = new Date(weather.forecast.forecastday[i].date).getDay()
+        forecastList[i] = getFormattedDay(date)
+      }
+
+      for (let i = 0; i < 3; i++) {
+        const date = new Date(weather.forecast.forecastday[i].date).getDate()
+        forecastList2[i] = date
+      }
+
+      return { forecastList, forecastList2 }
+    }
+
+    
+    const temp = func3()
+    setThreeDays(temp)
+
+  }, [weather])
+
+
   const getFormattedDay = (day: number): string => {
     // switch (new Date().getDay()) {
-      let newday = day;
 
-      if (day >= 7) {
-        newday = day - 7
-      }
-     
-      switch (newday) {
-        case 0:
-          return "Sunday"
-        case 1:
-          return "Monday"
-        case 2:
-          return "Tuesday"
-        case 3:
-          return "Wednesday"
-        case 4:
-          return "Thursday"
-        case 5:
-          return "Friday"
-        case 6:
-          return "Saturday"
-      }
-    
 
-    
+    switch (day) {
+      case 0:
+        return "Sunday"
+      case 1:
+        return "Monday"
+      case 2:
+        return "Tuesday"
+      case 3:
+        return "Wednesday"
+      case 4:
+        return "Thursday"
+      case 5:
+        return "Friday"
+      case 6:
+        return "Saturday"
+    }
 
     return "No Day"
   }
@@ -136,5 +159,9 @@ export function useDateAndTime(): [dateAndtimeInterface, dateType, (par: number)
 
     , [exactDate])
 
-  return [DateAndTime, exactDate, getFormattedDay, setDate]
+
+
+  return [DateAndTime, exactDate, threeDays, getFormattedDay, setDate]
+
+
 }

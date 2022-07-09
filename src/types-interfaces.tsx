@@ -185,6 +185,23 @@ export interface dateAndtimeInterface {
   formattedTime: string
 }
 
+export interface stringNum {
+  forecastList: string[]
+  forecastList2: number[]
+}
+
+export interface unsplashType {
+  tags: [{
+    source: {
+      cover_photo: {
+        urls: {
+          raw: string
+        }
+      }
+    }
+  }]
+}
+
 
 
 
