@@ -14,11 +14,12 @@ html {
 body {
   /* background-image: url(/images/sunset-tree-lake-nature-art.jpg);*/
   /* background-image: url('https://api.unsplash.com/search/photos?page=1&query=weather&client_id=rVKv3MJTT8Wmh_hpTGLt1Si59eP0s1IGXDMv2xJb0zM'); */
-  background-image: url('https://api.unsplash.com/collections?id=8240068&page=1&query=weather&client_id=rVKv3MJTT8Wmh_hpTGLt1Si59eP0s1IGXDMv2xJb0zM');
+  /* background-image: url('https://api.unsplash.com/collections?id=8240068&page=1&query=weather&client_id=rVKv3MJTT8Wmh_hpTGLt1Si59eP0s1IGXDMv2xJb0zM'); */
+  /* background-image: url("https://images.unsplash.com/photo-1536566482680-fca31930a0bd?ixlib=rb-1.2.1"); */
   background-repeat: no-repeat;
   /* background-size: cover; */
   background-position: center;
-  background-color: hsl(32, 54%, 57%);
+  background-color: hsla(32, 54%, 57%, 0.726);
 }
 
 .main-container {

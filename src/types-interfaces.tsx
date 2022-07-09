@@ -191,15 +191,34 @@ export interface stringNum {
 }
 
 export interface unsplashType {
-  tags: [{
-    source: {
-      cover_photo: {
-        urls: {
-          raw: string
+  photos: [{
+    tags: [{
+      source: {
+        cover_photo: {
+          urls: {
+            raw: string
+          }
         }
       }
-    }
+    }]
   }]
+}
+
+export interface photoInterface {
+  urls: {
+    raw: string
+  }
+}
+
+export interface searchImage {
+  results:[
+    {
+      urls:{
+        full:string
+      }
+    }
+  ]
+  
 }
 
 

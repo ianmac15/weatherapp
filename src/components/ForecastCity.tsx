@@ -12,13 +12,15 @@ const ForecastCity = () => {
     const [url, setUrl] = useUrl(city)
     const [weather, setWeather] = useWeather(url)
     const [dateAndTime, exactDate, threeDays, getFormattedDay, setDay] = useDateAndTime(weather)
-    const photos = usePhotos()
+    const [photos, styling] = usePhotos(weather)
 
     const numbers = [0, 1, 2]
+
+    
     
 
     return (
-        <div style={"backround-image":photos} className="main-container">
+        <div style={styling} className="main-container">
             <form className="main-container form1" onSubmit={setWeather}>
                 <input placeholder="Enter city name" className="input1"
                     value={city} type="text" onChange={(e) => { setCity(e.target.value); setUrl() }}></input>
