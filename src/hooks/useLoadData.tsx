@@ -8,21 +8,20 @@ const getData = (key :string) => {
       if (data !== null) {
         return JSON.parse(data)
       }
+    
 
     } catch {
       console.log("Couldn't get initial data!!!")
     }
 }
 
-export function useLocalStorage(key: string, variable: any) {
+export function useLoadData(key: string) {
 
-  const [value, setValue] = useState(() => {
+  const [value, setValue] = useState<weatherType>(() => 
     getData(key)
-  })
+  )
 
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value))
-  }, [value])
+  
 
-  return [value, setValue]
+  return value
 }

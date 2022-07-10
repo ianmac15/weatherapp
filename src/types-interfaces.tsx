@@ -214,6 +214,7 @@ export interface searchImage {
   results:[
     {
       urls:{
+        raw: string
         full:string
       }
     }

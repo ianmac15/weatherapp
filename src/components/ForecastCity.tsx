@@ -1,18 +1,25 @@
 import { useState } from 'react'
 import { useDateAndTime } from '../hooks/useDateAndTime'
+import { useLoadData } from '../hooks/useLoadData'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { usePhotos } from '../hooks/usePhotos'
+import { useSaveData } from '../hooks/useSaveData'
 import { useUrl } from '../hooks/useUrl'
 import { useWeather } from '../hooks/useWeather'
 import { getWindDir } from '../hooks/useWind'
+import { weatherType } from '../types-interfaces'
 import ForecastDay from './ForecastDay'
 
 const ForecastCity = () => {
 
     const [city, setCity] = useState('')
     const [url, setUrl] = useUrl(city)
-    const [weather, setWeather] = useWeather(url)
+    const initialData = useLoadData('weatherData')
+    const [weather, setWeather] = useWeather(url, initialData)
+    // const savedValue = useSaveData('weatherData', weather)
+    // const [initialData] = useLocalStorage('weatherData', weather)
     const [dateAndTime, exactDate, threeDays, getFormattedDay, setDay] = useDateAndTime(weather)
-    const [photos, styling] = usePhotos(weather)
+    // const [styling] = usePhotos(weather)
 
     const numbers = [0, 1, 2]
 
@@ -20,7 +27,7 @@ const ForecastCity = () => {
     
 
     return (
-        <div style={styling} className="main-container">
+        <div className="main-container">
             <form className="main-container form1" onSubmit={setWeather}>
                 <input placeholder="Enter city name" className="input1"
                     value={city} type="text" onChange={(e) => { setCity(e.target.value); setUrl() }}></input>

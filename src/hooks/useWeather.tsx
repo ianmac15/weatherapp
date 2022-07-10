@@ -13,7 +13,7 @@ const getData = () => {
     }
 }
 
-const init = {
+const init0 = {
     location: {
         name: '',
         region: '',
@@ -117,10 +117,11 @@ const init = {
     }]
 }
 
-export function useWeather(url: string): [weatherType, (e: React.FormEvent<HTMLFormElement>) => Promise<void>] {
+export function useWeather(url: string, initialData: weatherType): [weatherType, (e: React.FormEvent<HTMLFormElement>) => Promise<void>] {
 
     const [weather, setWeather] = useState<weatherType>(
-        () => getData()
+        // () => getData()
+        initialData
     )
 
     useEffect(() => {
