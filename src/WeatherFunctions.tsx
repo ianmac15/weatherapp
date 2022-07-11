@@ -1,4 +1,4 @@
-import { geolocationType, dateType, forecastdayType, linkProperties, weatherType, voidStringType } from "./types-interfaces"
+import { geolocationType, dateType, linkProperties, weatherType, voidStringType } from "./types-interfaces"
 
 export const cityLocation = (setGeolocation:React.Dispatch<React.SetStateAction<geolocationType>>,
      geolocation:geolocationType, apiParameters: linkProperties, setApiParameters: React.Dispatch<React.SetStateAction<linkProperties>>,

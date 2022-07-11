@@ -26,7 +26,7 @@ export function usePhotos(weather: weatherType): [React.CSSProperties] {
     
   // }
 
-  const url = `https://api.unsplash.com/search/photos?query=${weather.current.condition.text}&page=5&per_page=100&client_id=rVKv3MJTT8Wmh_hpTGLt1Si59eP0s1IGXDMv2xJb0zM`
+  const url = `https://api.unsplash.com/search/photos?query=weather&page=5&per_page=100&client_id=rVKv3MJTT8Wmh_hpTGLt1Si59eP0s1IGXDMv2xJb0zM`
 
   
 

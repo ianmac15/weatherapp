@@ -12,14 +12,12 @@ import ForecastDay from './ForecastDay'
 
 const ForecastCity = () => {
 
-    const [city, setCity] = useState('')
-    const [url, setUrl] = useUrl(city)
-    const initialData = useLoadData('weatherData')
-    const [weather, setWeather] = useWeather(url, initialData)
-    // const savedValue = useSaveData('weatherData', weather)
-    // const [initialData] = useLocalStorage('weatherData', weather)
+    const initialCity = useLoadData('cityData', 'pyrgos')
+    const [url, city, setUrl] = useUrl(initialCity)
+    // const initialData = useLoadData('weatherData')
+    const [weather, setWeather] = useWeather(url)
     const [dateAndTime, exactDate, threeDays, getFormattedDay, setDay] = useDateAndTime(weather)
-    // const [styling] = usePhotos(weather)
+    
 
     const numbers = [0, 1, 2]
 
@@ -30,7 +28,7 @@ const ForecastCity = () => {
         <div className="main-container">
             <form className="main-container form1" onSubmit={setWeather}>
                 <input placeholder="Enter city name" className="input1"
-                    value={city} type="text" onChange={(e) => { setCity(e.target.value); setUrl() }}></input>
+                    value={city} type="text" onChange={(e) => { setUrl(e.target.value) }}></input>
                 <input type="submit" className="btn" value="Enter" />
             </form>
             <div className="weather-container">
