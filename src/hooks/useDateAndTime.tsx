@@ -47,15 +47,21 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
       let forecastList: string[] = []
       let forecastList2: number[] = []
 
-      for (let i = 0; i < 3; i++) {
-        const date = new Date(weather.forecast.forecastday[i].date).getDay()
-        forecastList[i] = getFormattedDay(date)
+      try {
+        for (let i = 0; i < 3; i++) {
+          const date = new Date(weather.forecast.forecastday[i].date).getDay()
+          forecastList[i] = getFormattedDay(date)
+        }
+  
+        for (let i = 0; i < 3; i++) {
+          const date = new Date(weather.forecast.forecastday[i].date).getDate()
+          forecastList2[i] = date
+        }
+      } catch {
+        console.log("Not enough days")
       }
 
-      for (let i = 0; i < 3; i++) {
-        const date = new Date(weather.forecast.forecastday[i].date).getDate()
-        forecastList2[i] = date
-      }
+      
 
       return { forecastList, forecastList2 }
     }

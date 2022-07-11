@@ -9,13 +9,14 @@ import { useWeather } from '../hooks/useWeather'
 import { getWindDir } from '../hooks/useWind'
 import { weatherType } from '../types-interfaces'
 import ForecastDay from './ForecastDay'
+import {initializeWeather} from '../types-interfaces'
 
 const ForecastCity = () => {
 
-    const initialCity = useLoadData('cityData', 'pyrgos')
-    const [url, city, setUrl] = useUrl(initialCity)
-    // const initialData = useLoadData('weatherData')
-    const [weather, setWeather] = useWeather(url)
+    // const initialCity = useLoadData('cityData', 'pyrgos')
+    const [url, city, setUrl] = useUrl('pyrgos')
+    const initialData = useLoadData('weatherData')
+    const [weather, setWeather, reloadWeather] = useWeather(url, initialData)
     const [dateAndTime, exactDate, threeDays, getFormattedDay, setDay] = useDateAndTime(weather)
     
 
@@ -32,6 +33,7 @@ const ForecastCity = () => {
                 <input type="submit" className="btn" value="Enter" />
             </form>
             <div className="weather-container">
+                <button onClick={reloadWeather}>Reload weather forecast</button>
                 <div className="weather-container1">
                     <div className="city-info city-time">
                         <div>{weather.location.name}, {weather.location.region}, {weather.location.country}</div>

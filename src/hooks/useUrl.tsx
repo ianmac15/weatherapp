@@ -5,12 +5,12 @@ export function useUrl(initialCity:string): [string, string, (par:string) => voi
     const [city, setCity] = useState<string>(initialCity)
     const [url, setUrl] = useState<string>('')
 
-    useEffect(()=>{
-        window.localStorage.setItem('cityData', JSON.stringify(city))
-    },[city])
+    // useEffect(()=>{
+    //     window.localStorage.setItem('cityData', JSON.stringify(city))
+    // },[city])
 
     const apiParameters = {
-        cityOrLatLon: city,
+        
         days: 3,
         aqi: "no",
         alerts: "no"
@@ -18,10 +18,9 @@ export function useUrl(initialCity:string): [string, string, (par:string) => voi
       }
 
     const createUrl = (targetValue: string) => {
-        const newUrl = `http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${apiParameters.cityOrLatLon}&days=${apiParameters.days}&aqi=${apiParameters.aqi}&alerts=${apiParameters.alerts}`
         setCity(targetValue)
+        const newUrl = `http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${city}&days=${apiParameters.days}&aqi=${apiParameters.aqi}&alerts=${apiParameters.alerts}`
         setUrl(newUrl)
-        
     }
 
     return [url, city, createUrl]
