@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { weatherType, linkProperties } from "../types-interfaces"
+import { useUrl } from "./useUrl"
 
 
-export function useWeather(apiUrl: string, initialData: weatherType, setUrl: React.Dispatch<React.SetStateAction<string>>): [weatherType, (e?: React.FormEvent<HTMLFormElement>) => Promise<void>, (e: React.FormEvent<HTMLFormElement>) => Promise<void>] {
+export function useWeather(apiUrl: string, initialData: weatherType, setUrl: React.Dispatch<React.SetStateAction<string>>): [weatherType, (e?: React.FormEvent<HTMLFormElement>) => Promise<void>, (e?: React.FormEvent<HTMLFormElement>) => Promise<void>] {
 
     const [urlLocal, setUrlLocal] = useState<string>('')
     const [weather, setWeather] = useState<weatherType>(
@@ -46,9 +47,14 @@ export function useWeather(apiUrl: string, initialData: weatherType, setUrl: Rea
         return data
     }
 
-    const reloadWeather = async (e: React.FormEvent<HTMLFormElement>) => {
+    // const [url2, city2, setUrl2, createUrl2] = useUrl()
+    // createUrl2(weather.location.name)
+
+    const reloadWeather = async (e?: React.FormEvent<HTMLFormElement>) => {
         try {
-            e.preventDefault()
+            e?.preventDefault()
+
+
             const data2: weatherType = await getWeatherFromApi(urlLocal)
             if (data2) {
                 setWeather(data2)
@@ -74,7 +80,7 @@ export function useWeather(apiUrl: string, initialData: weatherType, setUrl: Rea
                 return
             }
 
-            navigate('/city')
+            // navigate('/city')
             setWeather(data)
             console.log("Weather has been set")
             setUrl('')

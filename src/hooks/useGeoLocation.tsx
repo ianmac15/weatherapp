@@ -9,7 +9,7 @@ export function useGeoLocation() {
     {
       country_code: "",
       country_name: "",
-      city: "Athens",
+      city: "",
       postal: "",
       latitude: "",
       longitude: "",
@@ -145,7 +145,7 @@ export function useGeoLocation() {
 
     getGeo()
     createUrl(tempcity)
-    geoweatherCall()
+    reloadGeoWeather()
 
   },[])
 

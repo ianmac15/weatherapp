@@ -197,8 +197,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<ForecastCity isHomePage={true}/>} />
-        <Route path="/city" element={<ForecastCity isHomePage={false}/>} />
+        <Route path="/" element={<ForecastCity isHomePage={false}/>} />
+        {/* <Route path="/city" element={<ForecastCity isHomePage={false}/>} /> */}
       </Routes>
     </Router>)
 
