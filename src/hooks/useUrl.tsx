@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-export function useUrl(initialCity:string): [string, string, (par:string) => void] {
+export function useUrl(): [string, string, React.Dispatch<React.SetStateAction<string>>, (par:string) => void] {
 
-    const [city, setCity] = useState<string>(initialCity)
+    const [city, setCity] = useState<string>('')
     const [url, setUrl] = useState<string>('')
 
     // useEffect(()=>{
@@ -23,5 +23,5 @@ export function useUrl(initialCity:string): [string, string, (par:string) => voi
         setUrl(newUrl)
     }
 
-    return [url, city, createUrl]
+    return [url, city, setUrl, createUrl]
 }

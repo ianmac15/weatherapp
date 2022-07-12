@@ -23,5 +23,5 @@ export function useLoadData(key: string, initialValue?: any) {
     getData(key, initialValue)
   )
 
-  return value
+  return [value, setValue]
 }

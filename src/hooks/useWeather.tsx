@@ -1,22 +1,11 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { weatherType, linkProperties } from "../types-interfaces"
 
-const getData = () => {
-    const data = window.localStorage.getItem('weatherData')
 
-    try {
-        if (data !== null) {
-            return JSON.parse(data)
-        }
-    } catch {
-        console.log("Couldn't get initial data!!!")
-    }
-}
+export function useWeather(apiUrl: string, initialData: weatherType, setUrl: React.Dispatch<React.SetStateAction<string>>): [weatherType, (e?: React.FormEvent<HTMLFormElement>) => Promise<void>, (e: React.FormEvent<HTMLFormElement>) => Promise<void>] {
 
-export function useWeather(url: string, initialData: weatherType): [weatherType, (e: React.FormEvent<HTMLFormElement>) => Promise<void>, () => Promise<void>] {
-
-    
-
+    const [urlLocal, setUrlLocal] = useState<string>('')
     const [weather, setWeather] = useState<weatherType>(
         // () => {
 
@@ -24,11 +13,8 @@ export function useWeather(url: string, initialData: weatherType): [weatherType,
         //         const data: weatherType = await getWeatherFromApi()
         //         setTempData(data)
         //     }
-
         //     callWeatherAfterReload()
         //     return tempData
-
-
         // }
         // () => getData()
         initialData
@@ -44,35 +30,54 @@ export function useWeather(url: string, initialData: weatherType): [weatherType,
     //     callWeatherAfterReload()
     // }, [])
 
-    const reloadWeather = async () => {
-        const data: weatherType = await getWeatherFromApi()
-        setWeather(data)
-    }
+    // useEffect(()=>{
+    //     reloadWeather()
+    // },[])
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         window.localStorage.setItem('weatherData', JSON.stringify(weather))
     }, [weather])
 
-    const getWeatherFromApi = async () => {
+    const getWeatherFromApi = async (url: string) => {
         const res = await fetch(url)
         const data = res.json()
         return data
     }
 
-    const weatherCall = async (e: React.FormEvent<HTMLFormElement>) => {
-
+    const reloadWeather = async (e: React.FormEvent<HTMLFormElement>) => {
         try {
             e.preventDefault()
+            const data2: weatherType = await getWeatherFromApi(urlLocal)
+            if (data2) {
+                setWeather(data2)
+                console.log('Weather has been reloaded')
+            }
 
-            const data: weatherType = await getWeatherFromApi()
+        } catch {
+            console.log("Error on reloading weather!")
+        }
 
-            if (data.location.name === null) {
+    }
+
+    const weatherCall = async (e?: React.FormEvent<HTMLFormElement>) => {
+
+        try {
+            e?.preventDefault()
+
+            const data: weatherType = await getWeatherFromApi(apiUrl)
+            setUrlLocal(apiUrl)
+
+            if (!data) {
                 alert("Enter a valid city!")
                 return
             }
 
+            navigate('/city')
             setWeather(data)
-            url = ''
+            console.log("Weather has been set")
+            setUrl('')
 
         } catch {
             alert("Enter a valid city!")

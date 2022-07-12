@@ -6,14 +6,16 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
 
   const [DateAndTime, setDateAndTime] = useState<dateAndtimeInterface>({ formattedDate: '', formattedTime: '' })
 
+  const today = new Date()
+
   const [exactDate, setExactDate] = useState<dateType>({
-    day: 0,
-    date: 0,
-    month: 0,
-    year: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
+    day: today.getDay(),
+    date: today.getDate(),
+    month: today.getMonth(),
+    year: today.getFullYear(),
+    hours: today.getHours(),
+    minutes: today.getMinutes(),
+    seconds: today.getSeconds()
   })
 
   const [currentDay, setCurrentDay] = useState('')
@@ -22,24 +24,24 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
     setCurrentDay(aDay)
   }
 
-  useEffect(() => {
-    const date = new Date(weather.forecast.forecastday[0].date)
-    setExactDate({
-      ...exactDate,
-      day: date.getDay(),
-      date: date.getDate(),
-      month: date.getMonth(),
-      year: date.getFullYear(),
-      hours: date.getHours(),
-      minutes: date.getMinutes(),
-      seconds: date.getSeconds()
-    })
+  // useEffect(() => {
+  //   // const date = new Date(weather.forecast.forecastday[0].date)
+  //   setExactDate({
+  //     ...exactDate,
+  //     day: today.getDay(),
+  //   date: today.getDate(),
+  //   month: today.getMonth(),
+  //   year: today.getFullYear(),
+  //   hours: today.getHours(),
+  //   minutes: today.getMinutes(),
+  //   seconds: today.getSeconds()
+  //   })
 
-  }, [exactDate])
+  // }, [exactDate])
 
   const [threeDays, setThreeDays] = useState<stringNum>({
-    forecastList: ['','',''],
-    forecastList2: [0,0,0]
+    forecastList: ['', '', ''],
+    forecastList2: [0, 0, 0]
   })
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
           const date = new Date(weather.forecast.forecastday[i].date).getDay()
           forecastList[i] = getFormattedDay(date)
         }
-  
+
         for (let i = 0; i < 3; i++) {
           const date = new Date(weather.forecast.forecastday[i].date).getDate()
           forecastList2[i] = date
@@ -61,12 +63,12 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
         console.log("Not enough days")
       }
 
-      
+
 
       return { forecastList, forecastList2 }
     }
 
-    
+
     const temp = func3()
     setThreeDays(temp)
 
@@ -127,10 +129,6 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
     }
   }
 
-  const getFormatedDateAndTime = () => {
-    setDateAndTime({ ...DateAndTime, formattedDate: getFormattedDate(), formattedTime: getTime() })
-  }
-
   const getFormattedDate = () => {
     // const date = new Date()
     return getFormattedDay(exactDate.day) + " " + exactDate.date + " " + " " + getFormattedMonth() + " " + exactDate.year
@@ -160,10 +158,10 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
   }
 
   useEffect(() => {
-    getFormatedDateAndTime()
+    setDateAndTime({ ...DateAndTime, formattedDate: getFormattedDate(), formattedTime: getTime() })
   }
 
-    , [exactDate])
+    , [])
 
 
 

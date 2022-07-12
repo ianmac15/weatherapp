@@ -9,36 +9,50 @@ import { useWeather } from '../hooks/useWeather'
 import { getWindDir } from '../hooks/useWind'
 import { weatherType } from '../types-interfaces'
 import ForecastDay from './ForecastDay'
-import {initializeWeather} from '../types-interfaces'
+import { initializeWeather } from '../types-interfaces'
+import { useGeoLocation } from '../hooks/useGeoLocation'
 
-const ForecastCity = () => {
+const ForecastCity = ({isHomePage}:properties) => {
 
     // const initialCity = useLoadData('cityData', 'pyrgos')
-    const [url, city, setUrl] = useUrl('pyrgos')
-    const initialData = useLoadData('weatherData')
-    const [weather, setWeather, reloadWeather] = useWeather(url, initialData)
-    const [dateAndTime, exactDate, threeDays, getFormattedDay, setDay] = useDateAndTime(weather)
     
+    const [geolocationWeather] = useGeoLocation()
+    const [url, city, setUrl, createUrl] = useUrl()
+    
+    
+    const [initialData, setInitialData] = useLoadData('weatherData')
+    if (isHomePage) {
+        setInitialData(geolocationWeather)
+    }
+    const [weather, weatherCall, reloadWeather] = useWeather(url, initialData, setUrl)
+    const [dateAndTime, exactDate, threeDays, getFormattedDay, setDay] = useDateAndTime(weather)
+
 
     const numbers = [0, 1, 2]
 
-    
-    
+
+
 
     return (
         <div className="main-container">
-            <form className="main-container form1" onSubmit={setWeather}>
+            <form className="main-container form1" onSubmit={weatherCall}>
                 <input placeholder="Enter city name" className="input1"
-                    value={city} type="text" onChange={(e) => { setUrl(e.target.value) }}></input>
+                    value={city} type="text" onChange={(e) => { createUrl(e.target.value) }}></input>
                 <input type="submit" className="btn" value="Enter" />
             </form>
             <div className="weather-container">
-                <button onClick={reloadWeather}>Reload weather forecast</button>
+
                 <div className="weather-container1">
+                    <div className='btn-container'>
+                        <form onSubmit={reloadWeather}>
+                            <input type='submit' className='btn' value='Reload weather forecast'/>
+                        </form>
+                        {/* <button className='btn' onClick={reloadWeather}>Reload weather forecast</button> */}
+                    </div>
                     <div className="city-info city-time">
                         <div>{weather.location.name}, {weather.location.region}, {weather.location.country}</div>
                         <div>{dateAndTime.formattedDate}</div>
-                        <div>{dateAndTime.formattedTime}</div>
+                        {/* <div>{dateAndTime.formattedTime}</div> */}
                     </div>
                     <div className="city-info">
                         <div className="weather-info" >
@@ -59,11 +73,11 @@ const ForecastCity = () => {
                 </div>
                 <div className="weather-container2">
                     <div className="weather-container3">
-                        {numbers.map((x) => 
-                            <ForecastDay forecast={weather.forecast.forecastday[x]} day={threeDays.forecastList[x] || ''}
+                        {numbers.map((x) =>
+                            <ForecastDay key={x} forecast={weather.forecast.forecastday[x]} day={threeDays.forecastList[x] || ''}
                                 date={threeDays.forecastList2[x]} />
                         )}
-                        
+
                     </div>
                     <div className="weather-container3">
 
@@ -84,6 +98,7 @@ interface properties {
     // getWindDir: stringString
     // getDayForecast: voidJSX
     // findCity: voidvoidType
+    isHomePage:boolean
 }
 
 export default ForecastCity
