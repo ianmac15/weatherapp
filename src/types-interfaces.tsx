@@ -188,6 +188,7 @@ export interface dateAndtimeInterface {
 export interface stringNum {
   forecastList: string[]
   forecastList2: number[]
+  month: string[]
 }
 
 export interface unsplashType {

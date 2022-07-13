@@ -26,7 +26,7 @@ export function useGeoLocation() {
     return data
   }
 
-  const [url, city, setUrl, createUrl] = useUrl()
+  const [url, city, setUrl, createUrl, setCity] = useUrl()
 
   const [tempcity, setTempCity] = useState('')
 
@@ -135,7 +135,7 @@ export function useGeoLocation() {
             }]
         }]
     }
-  },setUrl)
+  },setUrl, setCity)
 
   useEffect(()=>{
     const getGeo = async () => {

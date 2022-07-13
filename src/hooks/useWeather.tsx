@@ -4,7 +4,7 @@ import { weatherType, linkProperties } from "../types-interfaces"
 import { useUrl } from "./useUrl"
 
 
-export function useWeather(apiUrl: string, initialData: weatherType, setUrl: React.Dispatch<React.SetStateAction<string>>): [weatherType, (e?: React.FormEvent<HTMLFormElement>) => Promise<void>, (e?: React.FormEvent<HTMLFormElement>) => Promise<void>] {
+export function useWeather(apiUrl: string, initialData: weatherType, setUrl: React.Dispatch<React.SetStateAction<string>>, setCity:React.Dispatch<React.SetStateAction<string>>): [weatherType, (e?: React.FormEvent<HTMLFormElement>) => Promise<void>, (e?: React.FormEvent<HTMLFormElement>) => Promise<void>] {
 
     const [urlLocal, setUrlLocal] = useState<string>('')
     const [weather, setWeather] = useState<weatherType>(
@@ -84,6 +84,7 @@ export function useWeather(apiUrl: string, initialData: weatherType, setUrl: Rea
             setWeather(data)
             console.log("Weather has been set")
             setUrl('')
+            setCity('')
 
         } catch {
             alert("Enter a valid city!")

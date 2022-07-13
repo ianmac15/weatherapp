@@ -17,14 +17,14 @@ const ForecastCity = ({isHomePage}:properties) => {
     // const initialCity = useLoadData('cityData', 'pyrgos')
     
     const [geolocationWeather] = useGeoLocation()
-    const [url, city, setUrl, createUrl] = useUrl()
+    const [url, city, setUrl, createUrl, setCity] = useUrl()
     
     
     const [initialData, setInitialData] = useLoadData('weatherData', initializeWeather)
     if (isHomePage) {
         setInitialData(geolocationWeather)
     }
-    const [weather, weatherCall, reloadWeather] = useWeather(url, initialData, setUrl)
+    const [weather, weatherCall, reloadWeather] = useWeather(url, initialData, setUrl, setCity)
     const [dateAndTime, exactDate, threeDays, getFormattedDay, setDay] = useDateAndTime(weather)
 
 
@@ -35,6 +35,7 @@ const ForecastCity = ({isHomePage}:properties) => {
 
     return (
         <div className="main-container">
+            <title>Weather Forecast</title>
             <form className="main-container form1" onSubmit={weatherCall}>
                 <input placeholder="Enter city name" className="input1"
                     value={city} type="text" onChange={(e) => { createUrl(e.target.value) }}></input>
@@ -59,7 +60,7 @@ const ForecastCity = ({isHomePage}:properties) => {
                             <strong>The Weather right now</strong>
                             <div className="temp">
                                 <div >{weather.current.condition.text}</div>
-                                <img src={weather.current.condition.icon} />
+                                <img src={weather.current.condition.icon} className='weather-img'/>
                             </div>
 
                             <div>Temperature: {weather.current.temp_c} &deg; C</div>
@@ -75,7 +76,7 @@ const ForecastCity = ({isHomePage}:properties) => {
                     <div className="weather-container3">
                         {numbers.map((x) =>
                             <ForecastDay key={x} forecast={weather.forecast.forecastday[x]} day={threeDays.forecastList[x] || ''}
-                                date={threeDays.forecastList2[x]} />
+                                date={threeDays.forecastList2[x]} month={threeDays.month[x]}/>
                         )}
 
                     </div>
@@ -83,6 +84,9 @@ const ForecastCity = ({isHomePage}:properties) => {
 
                     </div>
                 </div>
+            </div>
+            <div className='weather-container6'>
+
             </div>
         </div>
     )

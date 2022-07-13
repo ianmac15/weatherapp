@@ -41,23 +41,29 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
 
   const [threeDays, setThreeDays] = useState<stringNum>({
     forecastList: ['', '', ''],
-    forecastList2: [0, 0, 0]
+    forecastList2: [0, 0, 0],
+    month: ['','','']
   })
 
   useEffect(() => {
     const func3 = () => {
       let forecastList: string[] = []
       let forecastList2: number[] = []
+      let month: string[] =[]
 
       try {
         for (let i = 0; i < 3; i++) {
-          const date = new Date(weather.forecast.forecastday[i].date).getDay()
-          forecastList[i] = getFormattedDay(date)
+          const date1 = new Date(weather.forecast.forecastday[i].date).getDay()
+          forecastList[i] = getFormattedDay(date1)
+          const date2 = new Date(weather.forecast.forecastday[i].date).getDate()
+          forecastList2[i] = date2
+          const date3 = new Date(weather.forecast.forecastday[i].date).getMonth()
+          const date3Format = getFormattedMonth(date3)
+          month[i] = date3Format
         }
 
         for (let i = 0; i < 3; i++) {
-          const date = new Date(weather.forecast.forecastday[i].date).getDate()
-          forecastList2[i] = date
+          
         }
       } catch {
         console.log("Not enough days")
@@ -65,7 +71,7 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
 
 
 
-      return { forecastList, forecastList2 }
+      return { forecastList, forecastList2, month }
     }
 
 
@@ -99,9 +105,9 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
     return "No Day"
   }
 
-  const getFormattedMonth = () => {
+  const getFormattedMonth = (monthNum: number) => {
     // switch (new Date().getMonth()) {
-    switch (exactDate.month) {
+    switch (monthNum) {
       case 0:
         return "January"
       case 1:
@@ -127,11 +133,13 @@ export function useDateAndTime(weather: weatherType): [dateAndtimeInterface, dat
       case 11:
         return "December"
     }
+
+    return "No month"
   }
 
   const getFormattedDate = () => {
     // const date = new Date()
-    return getFormattedDay(exactDate.day) + " " + exactDate.date + " " + " " + getFormattedMonth() + " " + exactDate.year
+    return getFormattedDay(exactDate.day) + " " + exactDate.date + " " + " " + getFormattedMonth(exactDate.month) + " " + exactDate.year
   }
 
   const getTime = () => {
