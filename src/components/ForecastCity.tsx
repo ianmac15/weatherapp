@@ -20,7 +20,7 @@ const ForecastCity = ({isHomePage}:properties) => {
     const [url, city, setUrl, createUrl] = useUrl()
     
     
-    const [initialData, setInitialData] = useLoadData('weatherData')
+    const [initialData, setInitialData] = useLoadData('weatherData', initializeWeather)
     if (isHomePage) {
         setInitialData(geolocationWeather)
     }
