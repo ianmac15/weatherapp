@@ -19,7 +19,7 @@ export function useUrl(): [string, string, React.Dispatch<React.SetStateAction<s
 
     const createUrl = (targetValue: string) => {
         setCity(targetValue)
-        const newUrl = `http://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${city}&days=${apiParameters.days}&aqi=${apiParameters.aqi}&alerts=${apiParameters.alerts}`
+        const newUrl = `https://api.weatherapi.com/v1/forecast.json?key=7000cd0d3d2c419b99463816221806&q=${city}&days=${apiParameters.days}&aqi=${apiParameters.aqi}&alerts=${apiParameters.alerts}`
         setUrl(newUrl)
     }
 
