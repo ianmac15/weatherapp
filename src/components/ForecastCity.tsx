@@ -29,6 +29,13 @@ const ForecastCity = ({isHomePage}:properties) => {
 
 
     const numbers = [0, 1, 2]
+    let hours = []
+
+    for (let i = 0; i < 24; i++) {
+        hours[i] = i
+    }
+    
+     
 
 
 
@@ -86,7 +93,13 @@ const ForecastCity = ({isHomePage}:properties) => {
                 </div>
             </div>
             <div className='weather-container6'>
-
+                <div className='hour-forecast'>
+                            {hours.map(
+                                ()=>{
+                                    return <></>
+                                }
+                            )}
+                </div>
             </div>
         </div>
     )

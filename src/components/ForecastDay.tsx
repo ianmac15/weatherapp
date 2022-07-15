@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom"
+import { useToggle } from "../hooks/useToggle"
 import { forecastdayType } from "../types-interfaces"
 
 
@@ -10,6 +12,13 @@ const ForecastDay = ({ forecast, day, date, month }: properties) => {
     return word[0] + word[1] + word[2]
   }
 
+  // const [isDayToHourToggled, toggleDayToHour] = useToggle()
+  const navigate = useNavigate()
+
+  const clickHourlyForecast = () => {
+    navigate('/perHour')
+  }
+
   return (
 
     <div className="weather-container4">
@@ -17,6 +26,7 @@ const ForecastDay = ({ forecast, day, date, month }: properties) => {
         <div style={{ "padding": "1rem" }}>{day}</div>
         <div>{date + '     ' + month}</div>
       </div>
+      <button className="btn btn2" onClick={clickHourlyForecast}>Forecast per hour</button>
       <div className="weather-container5">
         <div>{forecast?.day.condition.text}</div>
         <img src={forecast?.day.condition.icon} className='weather-img'/>

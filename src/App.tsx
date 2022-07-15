@@ -199,6 +199,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ForecastCity isHomePage={false}/>} />
         {/* <Route path="/city" element={<ForecastCity isHomePage={false}/>} /> */}
+        <Route path='/perHour' element={<ForecastHour isHomePage={false}/>}
       </Routes>
     </Router>)
 
